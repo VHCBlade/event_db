@@ -77,7 +77,7 @@ abstract class GenericModel {
   /// Unique type to give to the model. Whether or not collision is expected is dependent on the parameters of your system.
   String get type;
 
-  /// Converts the pair of [Getter]s and [Setter]s for an enum into the appropriate pair for storage (a String)
+  /// Converts the pair of [Getter] and [Setter] for an enum into the appropriate pair for storage (a String)
   ///
   /// [values] is the list of possible values that the enum has (ex. ExampleEnum.values)
   static Tuple2<Getter, Setter> convertEnumToString<T extends Enum>(
@@ -96,4 +96,36 @@ abstract class GenericModel {
       ),
     );
   }
+
+  /// Converts the pair of [Getter] and [Setter] for a [GenericModel] into the appropriate serialized type.
+  ///
+  /// [supplier] should generate a new mutable version of this [GenericModel]
+  static Tuple2<Getter, Setter> model<T extends GenericModel>(
+          Getter<T?> getter, Setter<T?> setter, Getter<T> supplier) =>
+      Tuple2(() => getter()?.toMap(),
+          (val) => setter(supplier()..loadFromMap(val)));
+
+  /// Converts the pair of [Getter] and [Setter] for a [List] of [GenericModel] into the appropriate serialized type.
+  ///
+  /// [supplier] should generate a new mutable version of this [GenericModel]
+  static Tuple2<Getter, Setter> modelList<T extends GenericModel>(
+          Getter<List<T>?> getter,
+          Setter<List<T>?> setter,
+          Getter<T> supplier) =>
+      Tuple2(
+          () => getter()?.map((e) => e.toMap()).toList(),
+          (val) =>
+              setter(val?.map<T>((e) => supplier()..loadFromMap(e)).toList()));
+
+  /// Converts the pair of [Getter] and [Setter] for a [Map] of [GenericModel] into the appropriate serialized type.
+  ///
+  /// [supplier] should generate a new mutable version of this [GenericModel]
+  static Tuple2<Getter, Setter> modelMap<T extends GenericModel>(
+          Getter<Map<String, T>?> getter,
+          Setter<Map<String, T>?> setter,
+          Getter<T> supplier) =>
+      Tuple2(
+          () => getter()?.map((key, value) => MapEntry(key, value.toMap())),
+          (val) => setter(val?.map<String, T>((key, value) =>
+              MapEntry("$key", supplier()..loadFromMap(value)))));
 }

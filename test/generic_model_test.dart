@@ -1,6 +1,6 @@
-import 'package:event_db/event_db.dart';
 import 'package:test/test.dart';
-import 'package:tuple/tuple.dart';
+
+import 'models.dart';
 
 void main() {
   group("To and From Map", () {
@@ -69,25 +69,4 @@ void main() {
       expect(model2.object, null);
     });
   });
-}
-
-enum ExampleEnum {
-  yes,
-  no,
-  ;
-}
-
-class ExampleModel extends GenericModel {
-  String? object;
-  ExampleEnum? myEnum;
-
-  @override
-  Map<String, Tuple2<Getter, Setter>> getGetterSetterMap() => {
-        "object": Tuple2(() => object, (val) => object = val),
-        "enum": GenericModel.convertEnumToString(
-            () => myEnum, (val) => myEnum = val, ExampleEnum.values)
-      };
-
-  @override
-  String get type => "example";
 }
