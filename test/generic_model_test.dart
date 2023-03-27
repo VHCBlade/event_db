@@ -30,6 +30,22 @@ void main() {
       expect(model2.id, model.id);
       expect(model2.myEnum, model.myEnum);
     });
+    test("Date Time", () {
+      final model = ExampleModel();
+      final model2 = ExampleModel();
+
+      model.id = "20";
+      model.object = "cool";
+      model.myEnum = ExampleEnum.yes;
+      model.dateTime = DateTime(1970, 5);
+
+      model2.loadFromMap(model.toMap());
+
+      expect(model2.object, model.object);
+      expect(model2.id, model.id);
+      expect(model2.myEnum, model.myEnum);
+      expect(model.dateTime, model2.dateTime);
+    });
   });
   group("Copy", () {
     test("Basic", () {

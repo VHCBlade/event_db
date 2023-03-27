@@ -1,3 +1,7 @@
+## 0.1.2
+
+- Added helper functions in GenericModel for creating the Getters and Setters for DateTimes and Primitives
+
 ## 0.1.1
 
 - Added helper functions in GenericModel for creating the Getters and Setters for GenericModels

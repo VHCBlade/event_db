@@ -128,4 +128,18 @@ abstract class GenericModel {
           () => getter()?.map((key, value) => MapEntry(key, value.toMap())),
           (val) => setter(val?.map<String, T>((key, value) =>
               MapEntry("$key", supplier()..loadFromMap(value)))));
+
+  /// Converts the pair of [Getter] and [Setter] for a [DateTime] into the appropriate serialized type. (microsecondsSinceEpoc)
+  static Tuple2<Getter, Setter> dateTime(
+          Getter<DateTime?> getter, Setter<DateTime?> setter) =>
+      Tuple2(
+          () => getter()?.microsecondsSinceEpoch,
+          (val) => setter(
+              val == null ? null : DateTime.fromMicrosecondsSinceEpoch(val)));
+
+  /// Takes the pair of [Getter] and [Setter] for a primitive and puts them in a [Tuple2]. Convenience function if you don't want to
+  /// rely on the tuple package directly.
+  static Tuple2<Getter, Setter> primitive<T>(
+          Getter<T?> getter, Setter<T?> setter) =>
+      Tuple2(() => getter(), (val) => setter(val));
 }

@@ -10,12 +10,16 @@ enum ExampleEnum {
 class ExampleModel extends GenericModel {
   String? object;
   ExampleEnum? myEnum;
+  DateTime dateTime = DateTime.now();
 
   @override
   Map<String, Tuple2<Getter, Setter>> getGetterSetterMap() => {
-        "object": Tuple2(() => object, (val) => object = val),
+        "object":
+            GenericModel.primitive(() => object, (value) => object = value),
         "enum": GenericModel.convertEnumToString(
-            () => myEnum, (val) => myEnum = val, ExampleEnum.values)
+            () => myEnum, (val) => myEnum = val, ExampleEnum.values),
+        "dateTime": GenericModel.dateTime(
+            () => dateTime, (value) => dateTime = value ?? DateTime.now()),
       };
 
   @override
