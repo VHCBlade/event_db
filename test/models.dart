@@ -42,5 +42,5 @@ class ExampleCompoundModel extends GenericModel {
       };
 
   @override
-  String get type => "example";
+  String get type => "example-compound";
 }
