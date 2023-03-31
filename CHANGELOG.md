@@ -1,3 +1,9 @@
+## 0.1.3
+
+- Added FakeDatabaseRepository
+- Added Method for prefixing
+- Changed DatabaseRepository abstract functions to be FutureOrs instead of strictly Futures
+
 ## 0.1.2
 
 - Added helper functions in GenericModel for creating the Getters and Setters for DateTimes and Primitives

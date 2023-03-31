@@ -1,4 +1,5 @@
 import 'package:tuple/tuple.dart';
+import 'package:uuid/uuid.dart';
 
 typedef Getter<T> = T Function();
 typedef Setter<T> = void Function(T value);
@@ -68,6 +69,13 @@ abstract class GenericModel {
       getterSetterMap[element]!.item2(model.getterSetterMap[element]!.item1());
     });
   }
+
+  /// Returns [id] if that value is not null. Otherwise will automatically generate a new value for [id] with the [idSuffix] setter.
+  String get autoGenId => id = id ?? prefixTypeForId(const Uuid().v4());
+
+  String prefixTypeForId(String idSuffix) => '${type}::$idSuffix';
+
+  set idSuffix(String idSuffix) => id = prefixTypeForId(idSuffix);
 
   /// Implemented by subclasses to map the getters and setters of the object.
   ///

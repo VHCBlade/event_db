@@ -85,4 +85,27 @@ void main() {
       expect(model2.object, null);
     });
   });
+
+  group("Id Suffix", () {
+    test("Generate", () {
+      final model = ExampleModel();
+      final model2 = ExampleModel();
+
+      expect(model.autoGenId, startsWith(ExampleModel().type));
+      expect(model2.autoGenId, startsWith(ExampleModel().type));
+
+      expect(model.autoGenId, model.id);
+      expect(model2.autoGenId, model2.id);
+    });
+    test("Already Existing", () {
+      final model = ExampleModel();
+      final model2 = ExampleModel();
+
+      model.id = "20";
+      model2.id = "great";
+
+      expect(model.autoGenId, "20");
+      expect(model2.autoGenId, "great");
+    });
+  });
 }
