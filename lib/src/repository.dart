@@ -14,3 +14,24 @@ abstract class DatabaseRepository extends Repository {
 
   FutureOr<T> saveModel<T extends GenericModel>(String database, T model);
 }
+
+class SpecificDatabase {
+  final DatabaseRepository database;
+  final String databaseName;
+
+  SpecificDatabase(this.database, this.databaseName);
+
+  /// This functions finds all models of the given type that have their [id] start with the prefix given by the [supplier]s [prefixTypeForId]
+  FutureOr<Iterable<T>> findAllModelsOfType<T extends GenericModel>(
+          T Function() supplier) =>
+      database.findAllModelsOfType(databaseName, supplier);
+
+  FutureOr<T?> findModel<T extends GenericModel>(String key) =>
+      database.findModel(databaseName, key);
+
+  FutureOr<bool> deleteModel<T extends GenericModel>(T model) =>
+      database.deleteModel(databaseName, model);
+
+  FutureOr<T> saveModel<T extends GenericModel>(T model) =>
+      database.saveModel(databaseName, model);
+}
