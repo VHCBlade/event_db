@@ -48,11 +48,7 @@ class GenericModelMap<T extends GenericModel> {
       {String? databaseName}) async {
     final database = specificDatabase(databaseName);
 
-    // TODO BP-17 Combine loading of values into one.
-    final loadedModels =
-        (await Future.wait(ids.map((e) async => database.findModel<T>(e))))
-            .where((element) => element != null)
-            .map((e) => e!);
+    final loadedModels = await database.findModels<T>(ids);
     addLoadedModels(loadedModels);
     return loadedModels;
   }

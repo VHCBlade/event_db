@@ -13,6 +13,17 @@ abstract class DatabaseRepository extends Repository {
   FutureOr<bool> deleteModel<T extends GenericModel>(String database, T model);
 
   FutureOr<T> saveModel<T extends GenericModel>(String database, T model);
+
+  /// Finds all the models in the given [database] that have the given [keys]
+  ///
+  /// The default implementation simply calls [findModel] multiple times. A concrete implementation with a more efficient
+  /// way of doing this should override this function.
+  FutureOr<Iterable<T>> findModels<T extends GenericModel>(
+          String database, Iterable<String> keys) async =>
+      (await Future.wait(keys.map((e) async => findModel<T>(database, e))))
+          .where((element) => element != null)
+          .map((e) => e!)
+          .toList();
 }
 
 class SpecificDatabase {
@@ -34,4 +45,8 @@ class SpecificDatabase {
 
   FutureOr<T> saveModel<T extends GenericModel>(T model) =>
       database.saveModel(databaseName, model);
+
+  FutureOr<Iterable<T>> findModels<T extends GenericModel>(
+          Iterable<String> keys) =>
+      database.findModels<T>(databaseName, keys);
 }
