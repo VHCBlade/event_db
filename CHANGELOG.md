@@ -1,3 +1,7 @@
+## 0.1.4+1
+
+- Added missing export for model_map.dart
+
 ## 0.1.4
 
 - Added SpecificDatabase to make DatabaseRepository interactions simpler when only using a single databaseName
