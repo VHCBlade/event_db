@@ -1,3 +1,7 @@
+## 0.1.5
+
+- Added findModels function to DatabaseRepository
+
 ## 0.1.4+1
 
 - Added missing export for model_map.dart
