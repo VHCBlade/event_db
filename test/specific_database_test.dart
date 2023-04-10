@@ -4,8 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'models.dart';
 
 Map<Type, ModelConstructor> get constructors => {
-      ExampleModel: () => ExampleModel(),
-      ExampleCompoundModel: () => ExampleCompoundModel(),
+      ExampleModel: ExampleModel.new,
+      ExampleCompoundModel: ExampleCompoundModel.new,
     };
 
 void main() {
@@ -32,12 +32,12 @@ void findAllModelsOfType() async {
         ..model = (ExampleModel()..dateTime = DateTime(2001)));
 
   expect(
-      (await database.findAllModelsOfType(() => ExampleModel()))
+      (await database.findAllModelsOfType(ExampleModel.new))
           .map((e) => e.dateTime)
           .toSet(),
       {DateTime(1998), DateTime(1999)});
   expect(
-      (await database.findAllModelsOfType(() => ExampleCompoundModel()))
+      (await database.findAllModelsOfType(ExampleCompoundModel.new))
           .map((e) => e.model.dateTime)
           .toSet(),
       {DateTime(2000), DateTime(2001)});

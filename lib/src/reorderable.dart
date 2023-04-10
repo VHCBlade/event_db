@@ -21,14 +21,18 @@ class ListMovement<T extends OrdereableModel> {
 }
 
 extension ReorderableMap<T extends OrdereableModel> on GenericModelMap<T> {
-  void setOrdinalOfNewEntry(T model) {
-    model.ordinal = map.entries.length;
+  T setOrdinalOfNewEntry(T model) {
+    return model..ordinal = map.entries.length;
   }
+
+  List<String> get defaultOrderedKeyList => map.keys.toList()
+    ..sort((a, b) => map[b]!.ordinal.compareTo(map[a]!.ordinal));
+  List<T> get defaultOrderedList =>
+      map.values.toList()..sort((a, b) => b.ordinal.compareTo(a.ordinal));
 
   Future<Iterable<T>> reorder(T model, int newOrdinal,
       {String? databaseName}) async {
-    final list = map.keys.toList();
-    list.sort((a, b) => map[b]!.ordinal.compareTo(map[a]!.ordinal));
+    final list = defaultOrderedKeyList;
 
     newOrdinal = min(newOrdinal, list.length);
     final initialOrdinal = list.indexOf(model.id!);

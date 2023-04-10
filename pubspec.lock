@@ -105,6 +105,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.2.0"
+  event_bloc_tester:
+    dependency: "direct dev"
+    description:
+      name: event_bloc_tester
+      sha256: eaa81cd216583b8bae67a70c4b6174b3fb900ec8377e8fdb5b833161a3da3020
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.2+1"
   fake_async:
     dependency: transitive
     description:
@@ -473,5 +481,5 @@ packages:
     source: hosted
     version: "3.1.1"
 sdks:
-  dart: ">=2.19.2 <3.0.0"
+  dart: ">=2.19.6 <3.0.0"
   flutter: ">=3.0.0"

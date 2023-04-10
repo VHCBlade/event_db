@@ -49,11 +49,11 @@ class ExampleCompoundModel extends GenericModel {
   @override
   Map<String, Tuple2<Getter, Setter>> getGetterSetterMap() => {
         "model": GenericModel.model(() => model,
-            (value) => model = value ?? ExampleModel(), () => ExampleModel()),
+            (value) => model = value ?? ExampleModel(), ExampleModel.new),
         "list": GenericModel.modelList(
-            () => list, (value) => list = value ?? [], () => ExampleModel()),
+            () => list, (value) => list = value ?? [], ExampleModel.new),
         "map": GenericModel.modelMap(
-            () => map, (value) => map = value ?? {}, () => ExampleModel()),
+            () => map, (value) => map = value ?? {}, ExampleModel.new),
       };
 
   @override
