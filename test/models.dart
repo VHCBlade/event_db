@@ -26,6 +26,21 @@ class ExampleModel extends GenericModel {
   String get type => "example";
 }
 
+class ExampleReorderableModel extends GenericModel with OrdereableModel {
+  String? name;
+  @override
+  int ordinal = 0;
+
+  @override
+  Map<String, Tuple2<Getter, Setter>> getGetterSetterMap() => {
+        "ordinal": ordinalGetterSetter,
+        "name": GenericModel.primitive(() => name, (value) => name = value),
+      };
+
+  @override
+  String get type => "Reorderable";
+}
+
 class ExampleCompoundModel extends GenericModel {
   late ExampleModel model;
   List<ExampleModel> list = [];

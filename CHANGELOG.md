@@ -1,3 +1,8 @@
+## 0.1.6
+
+- Added OrdereableModel interface
+- Added extension methods to GenericModelMap for ones that have an OrdereableModel
+
 ## 0.1.5
 
 - Added findModels function to DatabaseRepository
