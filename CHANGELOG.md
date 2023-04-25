@@ -1,3 +1,8 @@
+## 0.1.7
+
+- Added idSuffix getter to GenericModel
+- Changed idSuffix setter in GenericModel to use String? instead of String 
+
 ## 0.1.6
 
 - Added OrdereableModel interface

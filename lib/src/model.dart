@@ -75,7 +75,9 @@ abstract class GenericModel {
 
   String prefixTypeForId(String idSuffix) => '${type}::$idSuffix';
 
-  set idSuffix(String idSuffix) => id = prefixTypeForId(idSuffix);
+  set idSuffix(String? idSuffix) =>
+      id = idSuffix == null ? null : prefixTypeForId(idSuffix);
+  String? get idSuffix => id?.split('::').last;
 
   /// Implemented by subclasses to map the getters and setters of the object.
   ///
