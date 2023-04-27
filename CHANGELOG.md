@@ -1,3 +1,7 @@
+## 0.1.8
+
+- Fixed Bug that caused GenericModel.model to not work when the map has a null value for that particular entry.
+
 ## 0.1.7
 
 - Added idSuffix getter to GenericModel

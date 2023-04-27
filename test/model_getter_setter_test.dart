@@ -25,6 +25,23 @@ void main() {
 
         expect(model2.model.object, isNot(model.model.object));
       });
+      test("Nullable Model", () {
+        final model = ExampleCompoundModel()..model = ExampleModel();
+        final model2 = ExampleCompoundModel();
+
+        model.id = "20";
+        model.model.id = "cool";
+        model.model.object = "cool";
+        model.model.myEnum = ExampleEnum.yes;
+
+        model2.loadFromMap(model.toMap()..["model"] = null);
+
+        expect(model2.id, model.id);
+
+        model.model.object = "Great";
+
+        expect(model2.model.object, isNot(model.model.object));
+      });
       test("Model List", () {
         final model = ExampleCompoundModel()..model = ExampleModel();
         final model2 = ExampleCompoundModel();

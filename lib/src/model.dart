@@ -113,7 +113,7 @@ abstract class GenericModel {
   static Tuple2<Getter, Setter> model<T extends GenericModel>(
           Getter<T?> getter, Setter<T?> setter, Getter<T> supplier) =>
       Tuple2(() => getter()?.toMap(),
-          (val) => setter(supplier()..loadFromMap(val)));
+          (val) => setter(val == null ? null : (supplier()..loadFromMap(val))));
 
   /// Converts the pair of [Getter] and [Setter] for a [List] of [GenericModel] into the appropriate serialized type.
   ///
