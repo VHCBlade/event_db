@@ -3,15 +3,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'models.dart';
 
 void main() {
-  group("Generic Model", () {
-    group("Getter Setter", () {
-      test("Model", () {
+  group('Generic Model', () {
+    group('Getter Setter', () {
+      test('Model', () {
         final model = ExampleCompoundModel()..model = ExampleModel();
         final model2 = ExampleCompoundModel();
 
-        model.id = "20";
-        model.model.id = "cool";
-        model.model.object = "cool";
+        model.id = '20';
+        model.model.id = 'cool';
+        model.model.object = 'cool';
         model.model.myEnum = ExampleEnum.yes;
 
         model2.loadFromMap(model.toMap());
@@ -21,36 +21,35 @@ void main() {
         expect(model2.model.myEnum, model.model.myEnum);
         expect(model2.model.id, model.model.id);
 
-        model.model.object = "Great";
+        model.model.object = 'Great';
 
         expect(model2.model.object, isNot(model.model.object));
       });
-      test("Nullable Model", () {
+      test('Nullable Model', () {
         final model = ExampleCompoundModel()..model = ExampleModel();
         final model2 = ExampleCompoundModel();
 
-        model.id = "20";
-        model.model.id = "cool";
-        model.model.object = "cool";
+        model.id = '20';
+        model.model.id = 'cool';
+        model.model.object = 'cool';
         model.model.myEnum = ExampleEnum.yes;
 
-        model2.loadFromMap(model.toMap()..["model"] = null);
+        model2.loadFromMap(model.toMap()..['model'] = null);
 
         expect(model2.id, model.id);
 
-        model.model.object = "Great";
+        model.model.object = 'Great';
 
         expect(model2.model.object, isNot(model.model.object));
       });
-      test("Model List", () {
+      test('Model List', () {
         final model = ExampleCompoundModel()..model = ExampleModel();
         final model2 = ExampleCompoundModel();
 
-        final innerModel = ExampleModel();
-
-        innerModel.id = "cool";
-        innerModel.object = "cool";
-        innerModel.myEnum = ExampleEnum.yes;
+        final innerModel = ExampleModel()
+          ..id = 'cool'
+          ..object = 'cool'
+          ..myEnum = ExampleEnum.yes;
 
         model.list.add(innerModel);
 
@@ -60,31 +59,30 @@ void main() {
         expect(model2.list[0].myEnum, model.list[0].myEnum);
         expect(model2.list[0].id, model.list[0].id);
 
-        model.list[0].object = "Great";
+        model.list[0].object = 'Great';
 
         expect(model2.list[0].object, isNot(model.list[0].object));
       });
-      test("Model Map", () {
+      test('Model Map', () {
         final model = ExampleCompoundModel()..model = ExampleModel();
         final model2 = ExampleCompoundModel();
 
-        final innerModel = ExampleModel();
+        final innerModel = ExampleModel()
+          ..id = 'cool'
+          ..object = 'cool'
+          ..myEnum = ExampleEnum.yes;
 
-        innerModel.id = "cool";
-        innerModel.object = "cool";
-        innerModel.myEnum = ExampleEnum.yes;
-
-        model.map["0"] = innerModel;
+        model.map['0'] = innerModel;
 
         model2.loadFromMap(model.toMap());
 
-        expect(model2.map["0"]!.object, model.map["0"]!.object);
-        expect(model2.map["0"]!.myEnum, model.map["0"]!.myEnum);
-        expect(model2.map["0"]!.id, model.map["0"]!.id);
+        expect(model2.map['0']!.object, model.map['0']!.object);
+        expect(model2.map['0']!.myEnum, model.map['0']!.myEnum);
+        expect(model2.map['0']!.id, model.map['0']!.id);
 
-        model.map["0"]!.object = "Great";
+        model.map['0']!.object = 'Great';
 
-        expect(model2.map["0"]!.object, isNot(model.map["0"]!.object));
+        expect(model2.map['0']!.object, isNot(model.map['0']!.object));
       });
     });
   });

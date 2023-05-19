@@ -1,14 +1,23 @@
 import 'package:event_bloc/event_bloc.dart';
 import 'package:event_db/event_db.dart';
 
+/// Represents a constructor specifically for [GenericModel]
 typedef ModelConstructor<T extends GenericModel> = T Function();
 
+/// A [DatabaseRepository] that stores everything in memory
+///
+/// This is best used in unit tests
 class FakeDatabaseRepository extends DatabaseRepository {
+  /// [constructors] holds all of the [ModelConstructor]s that can be found in
+  /// this repository.
+  FakeDatabaseRepository({required this.constructors});
+
+  /// [constructors] holds all of the [ModelConstructor]s that can be found in
+  /// this repository.
   final Map<Type, ModelConstructor> constructors;
 
+  /// The "Storage" of this database
   Map<String, Map<String, GenericModel>> fakeDatabaseMap = {};
-
-  FakeDatabaseRepository({required this.constructors});
 
   @override
   bool deleteModel<T extends GenericModel>(String database, T model) {
@@ -21,9 +30,11 @@ class FakeDatabaseRepository extends DatabaseRepository {
 
   @override
   Iterable<T> findAllModelsOfType<T extends GenericModel>(
-      String database, T Function() supplier) {
+    String database,
+    T Function() supplier,
+  ) {
     final modelBase = supplier();
-    final keyPrefix = modelBase.prefixTypeForId("");
+    final keyPrefix = modelBase.prefixTypeForId('');
 
     return getMap(database)
         .entries
@@ -42,7 +53,7 @@ class FakeDatabaseRepository extends DatabaseRepository {
   }
 
   @override
-  List<BlocEventListener> generateListeners(BlocEventChannel channel) {
+  List<BlocEventListener<dynamic>> generateListeners(BlocEventChannel channel) {
     // DO NOTHING
     return [];
   }
@@ -56,14 +67,21 @@ class FakeDatabaseRepository extends DatabaseRepository {
     return model;
   }
 
+  /// Creates an instance using one of the [constructors]
+  ///
+  /// Will throw an [ArgumentError] if one isn't present in [constructors]
+  /// for [T]
   T getInstance<T>() {
     if (!constructors.containsKey(T)) {
       throw ArgumentError(
-          "$T was not added to the constructors of this FakeDatabaseRepository. Please ensure you add all constructors you want to use for each type you will use.");
+          '$T was not added to the constructors of this FakeDatabaseRepository.'
+          ' Please ensure you add all constructors you want to use for each '
+          'type you will use.');
     }
     return constructors[T]!() as T;
   }
 
+  /// Gets the "Storage" map for the given [database]
   Map<String, GenericModel> getMap(String database) {
     if (fakeDatabaseMap[database] == null) {
       fakeDatabaseMap[database] = {};

@@ -109,10 +109,10 @@ packages:
     dependency: "direct dev"
     description:
       name: event_bloc_tester
-      sha256: eaa81cd216583b8bae67a70c4b6174b3fb900ec8377e8fdb5b833161a3da3020
+      sha256: "064e3c103a6bfa076ed95e666fe5f56e0d0130e2e0903fd5df5d2b714ea98d54"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.2+1"
+    version: "0.1.4"
   fake_async:
     dependency: transitive
     description:
@@ -187,14 +187,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.5"
-  lints:
-    dependency: "direct dev"
-    description:
-      name: lints
-      sha256: "5e4a9cd06d447758280a8ac2405101e0e2094d2a1dbdd3756aec3fe7775ba593"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.1"
   logging:
     dependency: transitive
     description:
@@ -440,6 +432,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  very_good_analysis:
+    dependency: "direct dev"
+    description:
+      name: very_good_analysis
+      sha256: ebc48c51db35beeeec8c414e32f7bd78e612bd7f5992ccb0d46e19edaeb40b08
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.0+1"
   vm_service:
     dependency: transitive
     description:

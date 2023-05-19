@@ -1,3 +1,8 @@
+## 0.1.9
+
+- Added explicit dynamic to the Getters and Setters in GenericModel
+- Changed linter to very good analysis and applied the changes recommended.
+
 ## 0.1.8
 
 - Fixed Bug that caused GenericModel.model to not work when the map has a null value for that particular entry.

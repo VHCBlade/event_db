@@ -13,17 +13,23 @@ class ExampleModel extends GenericModel {
   DateTime dateTime = DateTime.now();
 
   @override
-  Map<String, Tuple2<Getter, Setter>> getGetterSetterMap() => {
-        "object":
+  Map<String, Tuple2<Getter<dynamic>, Setter<dynamic>>> getGetterSetterMap() =>
+      {
+        'object':
             GenericModel.primitive(() => object, (value) => object = value),
-        "enum": GenericModel.convertEnumToString(
-            () => myEnum, (val) => myEnum = val, ExampleEnum.values),
-        "dateTime": GenericModel.dateTime(
-            () => dateTime, (value) => dateTime = value ?? DateTime.now()),
+        'enum': GenericModel.convertEnumToString(
+          () => myEnum,
+          (val) => myEnum = val,
+          ExampleEnum.values,
+        ),
+        'dateTime': GenericModel.dateTime(
+          () => dateTime,
+          (value) => dateTime = value ?? DateTime.now(),
+        ),
       };
 
   @override
-  String get type => "example";
+  String get type => 'example';
 }
 
 class ExampleReorderableModel extends GenericModel with OrdereableModel {
@@ -32,13 +38,14 @@ class ExampleReorderableModel extends GenericModel with OrdereableModel {
   int ordinal = 0;
 
   @override
-  Map<String, Tuple2<Getter, Setter>> getGetterSetterMap() => {
-        "ordinal": ordinalGetterSetter,
-        "name": GenericModel.primitive(() => name, (value) => name = value),
+  Map<String, Tuple2<Getter<dynamic>, Setter<dynamic>>> getGetterSetterMap() =>
+      {
+        'ordinal': ordinalGetterSetter,
+        'name': GenericModel.primitive(() => name, (value) => name = value),
       };
 
   @override
-  String get type => "Reorderable";
+  String get type => 'Reorderable';
 }
 
 class ExampleCompoundModel extends GenericModel {
@@ -47,15 +54,25 @@ class ExampleCompoundModel extends GenericModel {
   Map<String, ExampleModel> map = {};
 
   @override
-  Map<String, Tuple2<Getter, Setter>> getGetterSetterMap() => {
-        "model": GenericModel.model(() => model,
-            (value) => model = value ?? ExampleModel(), ExampleModel.new),
-        "list": GenericModel.modelList(
-            () => list, (value) => list = value ?? [], ExampleModel.new),
-        "map": GenericModel.modelMap(
-            () => map, (value) => map = value ?? {}, ExampleModel.new),
+  Map<String, Tuple2<Getter<dynamic>, Setter<dynamic>>> getGetterSetterMap() =>
+      {
+        'model': GenericModel.model(
+          () => model,
+          (value) => model = value ?? ExampleModel(),
+          ExampleModel.new,
+        ),
+        'list': GenericModel.modelList(
+          () => list,
+          (value) => list = value ?? [],
+          ExampleModel.new,
+        ),
+        'map': GenericModel.modelMap(
+          () => map,
+          (value) => map = value ?? {},
+          ExampleModel.new,
+        ),
       };
 
   @override
-  String get type => "example-compound";
+  String get type => 'example-compound';
 }
