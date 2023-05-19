@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2023-05-19 12:52:18</td>
+            <td class="headerValue">2023-05-19 17:41:18</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">0</td>
@@ -60,88 +60,119 @@
       <td>
 <pre class="sourceHeading">          Line data    Source code</pre>
 <pre class="source">
-<a name="1"><span class="lineNum">       1 </span>            : import 'package:event_db/src/model.dart';</a>
-<a name="2"><span class="lineNum">       2 </span>            : import 'package:event_db/src/repository.dart';</a>
-<a name="3"><span class="lineNum">       3 </span>            : </a>
-<a name="4"><span class="lineNum">       4 </span>            : // TODO: BP-32</a>
-<a name="5"><span class="lineNum">       5 </span>            : class GenericModelMap&lt;T extends GenericModel&gt; {</a>
-<a name="6"><span class="lineNum">       6 </span>            :   final Map&lt;String, T&gt; map = {};</a>
-<a name="7"><span class="lineNum">       7 </span>            :   final T Function() supplier;</a>
-<a name="8"><span class="lineNum">       8 </span>            :   final DatabaseRepository Function() repository;</a>
-<a name="9"><span class="lineNum">       9 </span>            :   final String? defaultDatabaseName;</a>
-<a name="10"><span class="lineNum">      10 </span>            : </a>
-<a name="11"><span class="lineNum">      11 </span>            :   /// Maintains a [map] for the [T] models with their [id] as their key.</a>
-<a name="12"><span class="lineNum">      12 </span>            :   ///</a>
-<a name="13"><span class="lineNum">      13 </span>            :   /// [supplier] generates a new instance of [T]</a>
-<a name="14"><span class="lineNum">      14 </span>            :   ///</a>
-<a name="15"><span class="lineNum">      15 </span>            :   /// [repository] gives this the instance of the [DatabaseRepository] to be used in the automatic loading functions of this class.</a>
-<a name="16"><span class="lineNum">      16 </span>            :   ///</a>
-<a name="17"><span class="lineNum">      17 </span>            :   /// [defaultDatabaseName] is the database the [repository] will use. This can be overridden in all the loading functions of this class.</a>
-<a name="18"><span class="lineNum">      18 </span><span class="lineCov">          1 :   GenericModelMap({</span></a>
-<a name="19"><span class="lineNum">      19 </span>            :     required this.repository,</a>
-<a name="20"><span class="lineNum">      20 </span>            :     required this.supplier,</a>
-<a name="21"><span class="lineNum">      21 </span>            :     this.defaultDatabaseName,</a>
-<a name="22"><span class="lineNum">      22 </span>            :   });</a>
-<a name="23"><span class="lineNum">      23 </span>            : </a>
-<a name="24"><span class="lineNum">      24 </span>            :   /// Creates the [SpecificDatabase] using the [defaultDatabaseName] passed in the constructor.</a>
-<a name="25"><span class="lineNum">      25 </span>            :   ///</a>
-<a name="26"><span class="lineNum">      26 </span>            :   /// if [databaseName] is provided, it will use that rather than [defaultDatabaseName]</a>
-<a name="27"><span class="lineNum">      27 </span><span class="lineCov">          1 :   SpecificDatabase specificDatabase([String? databaseName]) {</span></a>
-<a name="28"><span class="lineNum">      28 </span><span class="lineCov">          2 :     assert(databaseName != null || defaultDatabaseName != null);</span></a>
-<a name="29"><span class="lineNum">      29 </span><span class="lineCov">          4 :     return SpecificDatabase(repository(), databaseName ?? defaultDatabaseName!);</span></a>
-<a name="30"><span class="lineNum">      30 </span>            :   }</a>
-<a name="31"><span class="lineNum">      31 </span>            : </a>
-<a name="32"><span class="lineNum">      32 </span><span class="lineCov">          1 :   void addLoadedModels(Iterable&lt;T&gt; models) =&gt;</span></a>
-<a name="33"><span class="lineNum">      33 </span><span class="lineCov">          6 :       map.addAll({for (final model in models) model.id!: model});</span></a>
-<a name="34"><span class="lineNum">      34 </span>            : </a>
-<a name="35"><span class="lineNum">      35 </span><span class="lineNoCov">          0 :   void removeLoadedModels(Iterable&lt;T&gt; models) {</span></a>
-<a name="36"><span class="lineNum">      36 </span><span class="lineNoCov">          0 :     final set = models.map((e) =&gt; e.id).toSet();</span></a>
-<a name="37"><span class="lineNum">      37 </span><span class="lineNoCov">          0 :     map.removeWhere((key, value) =&gt; set.contains(key));</span></a>
-<a name="38"><span class="lineNum">      38 </span>            :   }</a>
-<a name="39"><span class="lineNum">      39 </span>            : </a>
-<a name="40"><span class="lineNum">      40 </span><span class="lineCov">          1 :   Future&lt;Iterable&lt;T&gt;&gt; loadAll({String? databaseName}) async {</span></a>
-<a name="41"><span class="lineNum">      41 </span><span class="lineCov">          1 :     final database = specificDatabase(databaseName);</span></a>
-<a name="42"><span class="lineNum">      42 </span><span class="lineCov">          2 :     final models = await database.findAllModelsOfType(supplier);</span></a>
-<a name="43"><span class="lineNum">      43 </span><span class="lineCov">          1 :     addLoadedModels(models);</span></a>
-<a name="44"><span class="lineNum">      44 </span>            :     return models;</a>
-<a name="45"><span class="lineNum">      45 </span>            :   }</a>
-<a name="46"><span class="lineNum">      46 </span>            : </a>
-<a name="47"><span class="lineNum">      47 </span><span class="lineNoCov">          0 :   Future&lt;Iterable&lt;T&gt;&gt; loadModelIds(Iterable&lt;String&gt; ids,</span></a>
-<a name="48"><span class="lineNum">      48 </span>            :       {String? databaseName}) async {</a>
-<a name="49"><span class="lineNum">      49 </span><span class="lineNoCov">          0 :     final database = specificDatabase(databaseName);</span></a>
-<a name="50"><span class="lineNum">      50 </span>            : </a>
-<a name="51"><span class="lineNum">      51 </span><span class="lineNoCov">          0 :     final loadedModels = await database.findModels&lt;T&gt;(ids);</span></a>
-<a name="52"><span class="lineNum">      52 </span><span class="lineNoCov">          0 :     addLoadedModels(loadedModels);</span></a>
-<a name="53"><span class="lineNum">      53 </span>            :     return loadedModels;</a>
-<a name="54"><span class="lineNum">      54 </span>            :   }</a>
-<a name="55"><span class="lineNum">      55 </span>            : </a>
-<a name="56"><span class="lineNum">      56 </span><span class="lineCov">          1 :   Future&lt;T&gt; addModel(T model, {String? databaseName}) async {</span></a>
-<a name="57"><span class="lineNum">      57 </span><span class="lineCov">          1 :     final database = specificDatabase(databaseName);</span></a>
-<a name="58"><span class="lineNum">      58 </span>            : </a>
-<a name="59"><span class="lineNum">      59 </span><span class="lineCov">          1 :     final newModel = await database.saveModel&lt;T&gt;(model);</span></a>
-<a name="60"><span class="lineNum">      60 </span><span class="lineCov">          2 :     addLoadedModels([newModel]);</span></a>
-<a name="61"><span class="lineNum">      61 </span>            : </a>
-<a name="62"><span class="lineNum">      62 </span>            :     return newModel;</a>
-<a name="63"><span class="lineNum">      63 </span>            :   }</a>
-<a name="64"><span class="lineNum">      64 </span>            : </a>
-<a name="65"><span class="lineNum">      65 </span><span class="lineNoCov">          0 :   Future&lt;bool&gt; deleteModel(T model, {String? databaseName}) async {</span></a>
-<a name="66"><span class="lineNum">      66 </span><span class="lineNoCov">          0 :     final database = specificDatabase(databaseName);</span></a>
-<a name="67"><span class="lineNum">      67 </span>            : </a>
-<a name="68"><span class="lineNum">      68 </span><span class="lineNoCov">          0 :     final successful = await database.deleteModel&lt;T&gt;(model);</span></a>
-<a name="69"><span class="lineNum">      69 </span>            :     if (successful) {</a>
-<a name="70"><span class="lineNum">      70 </span><span class="lineNoCov">          0 :       removeLoadedModels([model]);</span></a>
-<a name="71"><span class="lineNum">      71 </span>            :     }</a>
-<a name="72"><span class="lineNum">      72 </span>            :     return successful;</a>
-<a name="73"><span class="lineNum">      73 </span>            :   }</a>
-<a name="74"><span class="lineNum">      74 </span>            : </a>
-<a name="75"><span class="lineNum">      75 </span><span class="lineCov">          1 :   Future&lt;T&gt; updateModel(T model, {String? databaseName}) async {</span></a>
-<a name="76"><span class="lineNum">      76 </span><span class="lineCov">          1 :     final database = specificDatabase(databaseName);</span></a>
-<a name="77"><span class="lineNum">      77 </span>            : </a>
-<a name="78"><span class="lineNum">      78 </span><span class="lineCov">          1 :     final newModel = await database.saveModel&lt;T&gt;(model);</span></a>
-<a name="79"><span class="lineNum">      79 </span><span class="lineCov">          2 :     addLoadedModels([newModel]);</span></a>
-<a name="80"><span class="lineNum">      80 </span>            :     return newModel;</a>
-<a name="81"><span class="lineNum">      81 </span>            :   }</a>
-<a name="82"><span class="lineNum">      82 </span>            : }</a>
+<a name="1"><span class="lineNum">       1 </span>            : import 'package:event_db/event_db.dart';</a>
+<a name="2"><span class="lineNum">       2 </span>            : </a>
+<a name="3"><span class="lineNum">       3 </span>            : /// Represents a map of [GenericModel]s with functions to automatically</a>
+<a name="4"><span class="lineNum">       4 </span>            : /// retrieve and save them in a [DatabaseRepository]</a>
+<a name="5"><span class="lineNum">       5 </span>            : // TODO(vhcblade): BP-32 https://trello.com/c/uj0uS1cO/32-bp-32-add-test-for-genericmodelmap-in-eventdb</a>
+<a name="6"><span class="lineNum">       6 </span>            : class GenericModelMap&lt;T extends GenericModel&gt; {</a>
+<a name="7"><span class="lineNum">       7 </span>            :   /// Maintains a [map] for the [T] models with their id as their key.</a>
+<a name="8"><span class="lineNum">       8 </span>            :   ///</a>
+<a name="9"><span class="lineNum">       9 </span>            :   /// [supplier] generates a new instance of [T]</a>
+<a name="10"><span class="lineNum">      10 </span>            :   ///</a>
+<a name="11"><span class="lineNum">      11 </span>            :   /// [repository] gives this the instance of the [DatabaseRepository] to be</a>
+<a name="12"><span class="lineNum">      12 </span>            :   /// used in the automatic loading functions of this class.</a>
+<a name="13"><span class="lineNum">      13 </span>            :   ///</a>
+<a name="14"><span class="lineNum">      14 </span>            :   /// [defaultDatabaseName] is the database the [repository] will use. This can</a>
+<a name="15"><span class="lineNum">      15 </span>            :   /// be overridden in all the loading functions of this class.</a>
+<a name="16"><span class="lineNum">      16 </span><span class="lineCov">          1 :   GenericModelMap({</span></a>
+<a name="17"><span class="lineNum">      17 </span>            :     required this.repository,</a>
+<a name="18"><span class="lineNum">      18 </span>            :     required this.supplier,</a>
+<a name="19"><span class="lineNum">      19 </span>            :     this.defaultDatabaseName,</a>
+<a name="20"><span class="lineNum">      20 </span>            :   });</a>
+<a name="21"><span class="lineNum">      21 </span>            : </a>
+<a name="22"><span class="lineNum">      22 </span>            :   /// The map of [GenericModel]s with their id as the key</a>
+<a name="23"><span class="lineNum">      23 </span>            :   final Map&lt;String, T&gt; map = {};</a>
+<a name="24"><span class="lineNum">      24 </span>            : </a>
+<a name="25"><span class="lineNum">      25 </span>            :   /// Creates a new instance of [T], provided in the constructor</a>
+<a name="26"><span class="lineNum">      26 </span>            :   final ModelConstructor&lt;T&gt; supplier;</a>
+<a name="27"><span class="lineNum">      27 </span>            : </a>
+<a name="28"><span class="lineNum">      28 </span>            :   /// Returns the used [DatabaseRepository] for the various functions provided.</a>
+<a name="29"><span class="lineNum">      29 </span>            :   final DatabaseRepository Function() repository;</a>
+<a name="30"><span class="lineNum">      30 </span>            : </a>
+<a name="31"><span class="lineNum">      31 </span>            :   /// Used in the various functions if a databaseName is not specified for them.</a>
+<a name="32"><span class="lineNum">      32 </span>            :   final String? defaultDatabaseName;</a>
+<a name="33"><span class="lineNum">      33 </span>            : </a>
+<a name="34"><span class="lineNum">      34 </span>            :   /// Creates the [SpecificDatabase] using the [defaultDatabaseName] passed in</a>
+<a name="35"><span class="lineNum">      35 </span>            :   /// the constructor.</a>
+<a name="36"><span class="lineNum">      36 </span>            :   ///</a>
+<a name="37"><span class="lineNum">      37 </span>            :   /// if [databaseName] is provided, it will use that rather than</a>
+<a name="38"><span class="lineNum">      38 </span>            :   /// [defaultDatabaseName]</a>
+<a name="39"><span class="lineNum">      39 </span><span class="lineCov">          1 :   SpecificDatabase specificDatabase([String? databaseName]) {</span></a>
+<a name="40"><span class="lineNum">      40 </span>            :     assert(</a>
+<a name="41"><span class="lineNum">      41 </span><span class="lineCov">          2 :       databaseName != null || defaultDatabaseName != null,</span></a>
+<a name="42"><span class="lineNum">      42 </span>            :       'At least one of defaultDatabaseName and databaseName needs to be '</a>
+<a name="43"><span class="lineNum">      43 </span>            :       'provided',</a>
+<a name="44"><span class="lineNum">      44 </span>            :     );</a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">          4 :     return SpecificDatabase(repository(), databaseName ?? defaultDatabaseName!);</span></a>
+<a name="46"><span class="lineNum">      46 </span>            :   }</a>
+<a name="47"><span class="lineNum">      47 </span>            : </a>
+<a name="48"><span class="lineNum">      48 </span>            :   /// Adds the given [models] to the [map] without adding them to the</a>
+<a name="49"><span class="lineNum">      49 </span>            :   /// [repository]. It is assumed that these are already present.</a>
+<a name="50"><span class="lineNum">      50 </span><span class="lineCov">          1 :   void addLoadedModels(Iterable&lt;T&gt; models) =&gt;</span></a>
+<a name="51"><span class="lineNum">      51 </span><span class="lineCov">          6 :       map.addAll({for (final model in models) model.id!: model});</span></a>
+<a name="52"><span class="lineNum">      52 </span>            : </a>
+<a name="53"><span class="lineNum">      53 </span>            :   /// Removes the given [models] to the [map] without removing them from the</a>
+<a name="54"><span class="lineNum">      54 </span>            :   /// [repository]. It is assumed that these have already been removed.</a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineNoCov">          0 :   void removeLoadedModels(Iterable&lt;T&gt; models) {</span></a>
+<a name="56"><span class="lineNum">      56 </span><span class="lineNoCov">          0 :     final set = models.map((e) =&gt; e.id).toSet();</span></a>
+<a name="57"><span class="lineNum">      57 </span><span class="lineNoCov">          0 :     map.removeWhere((key, value) =&gt; set.contains(key));</span></a>
+<a name="58"><span class="lineNum">      58 </span>            :   }</a>
+<a name="59"><span class="lineNum">      59 </span>            : </a>
+<a name="60"><span class="lineNum">      60 </span>            :   /// Loads all of the [T] models present in [repository]</a>
+<a name="61"><span class="lineNum">      61 </span>            :   /// for the given database.</a>
+<a name="62"><span class="lineNum">      62 </span><span class="lineCov">          1 :   Future&lt;Iterable&lt;T&gt;&gt; loadAll({String? databaseName}) async {</span></a>
+<a name="63"><span class="lineNum">      63 </span><span class="lineCov">          1 :     final database = specificDatabase(databaseName);</span></a>
+<a name="64"><span class="lineNum">      64 </span><span class="lineCov">          2 :     final models = await database.findAllModelsOfType(supplier);</span></a>
+<a name="65"><span class="lineNum">      65 </span><span class="lineCov">          1 :     addLoadedModels(models);</span></a>
+<a name="66"><span class="lineNum">      66 </span>            :     return models;</a>
+<a name="67"><span class="lineNum">      67 </span>            :   }</a>
+<a name="68"><span class="lineNum">      68 </span>            : </a>
+<a name="69"><span class="lineNum">      69 </span>            :   /// Loads all of the [T] models with the given [ids] in [repository]</a>
+<a name="70"><span class="lineNum">      70 </span>            :   /// for the given database.</a>
+<a name="71"><span class="lineNum">      71 </span><span class="lineNoCov">          0 :   Future&lt;Iterable&lt;T&gt;&gt; loadModelIds(</span></a>
+<a name="72"><span class="lineNum">      72 </span>            :     Iterable&lt;String&gt; ids, {</a>
+<a name="73"><span class="lineNum">      73 </span>            :     String? databaseName,</a>
+<a name="74"><span class="lineNum">      74 </span>            :   }) async {</a>
+<a name="75"><span class="lineNum">      75 </span><span class="lineNoCov">          0 :     final database = specificDatabase(databaseName);</span></a>
+<a name="76"><span class="lineNum">      76 </span>            : </a>
+<a name="77"><span class="lineNum">      77 </span><span class="lineNoCov">          0 :     final loadedModels = await database.findModels&lt;T&gt;(ids);</span></a>
+<a name="78"><span class="lineNum">      78 </span><span class="lineNoCov">          0 :     addLoadedModels(loadedModels);</span></a>
+<a name="79"><span class="lineNum">      79 </span>            :     return loadedModels;</a>
+<a name="80"><span class="lineNum">      80 </span>            :   }</a>
+<a name="81"><span class="lineNum">      81 </span>            : </a>
+<a name="82"><span class="lineNum">      82 </span>            :   /// Adds the given [model] to the [map] and the given database in [repository]</a>
+<a name="83"><span class="lineNum">      83 </span><span class="lineCov">          1 :   Future&lt;T&gt; addModel(T model, {String? databaseName}) async {</span></a>
+<a name="84"><span class="lineNum">      84 </span><span class="lineCov">          1 :     final database = specificDatabase(databaseName);</span></a>
+<a name="85"><span class="lineNum">      85 </span>            : </a>
+<a name="86"><span class="lineNum">      86 </span><span class="lineCov">          1 :     final newModel = await database.saveModel&lt;T&gt;(model);</span></a>
+<a name="87"><span class="lineNum">      87 </span><span class="lineCov">          2 :     addLoadedModels([newModel]);</span></a>
+<a name="88"><span class="lineNum">      88 </span>            : </a>
+<a name="89"><span class="lineNum">      89 </span>            :     return newModel;</a>
+<a name="90"><span class="lineNum">      90 </span>            :   }</a>
+<a name="91"><span class="lineNum">      91 </span>            : </a>
+<a name="92"><span class="lineNum">      92 </span>            :   /// Deletes the given [model] from the [map] and the given database in</a>
+<a name="93"><span class="lineNum">      93 </span>            :   /// [repository]</a>
+<a name="94"><span class="lineNum">      94 </span><span class="lineNoCov">          0 :   Future&lt;bool&gt; deleteModel(T model, {String? databaseName}) async {</span></a>
+<a name="95"><span class="lineNum">      95 </span><span class="lineNoCov">          0 :     final database = specificDatabase(databaseName);</span></a>
+<a name="96"><span class="lineNum">      96 </span>            : </a>
+<a name="97"><span class="lineNum">      97 </span><span class="lineNoCov">          0 :     final successful = await database.deleteModel&lt;T&gt;(model);</span></a>
+<a name="98"><span class="lineNum">      98 </span>            :     if (successful) {</a>
+<a name="99"><span class="lineNum">      99 </span><span class="lineNoCov">          0 :       removeLoadedModels([model]);</span></a>
+<a name="100"><span class="lineNum">     100 </span>            :     }</a>
+<a name="101"><span class="lineNum">     101 </span>            :     return successful;</a>
+<a name="102"><span class="lineNum">     102 </span>            :   }</a>
+<a name="103"><span class="lineNum">     103 </span>            : </a>
+<a name="104"><span class="lineNum">     104 </span>            :   /// Updates the given [model] to the [map] and the given database in</a>
+<a name="105"><span class="lineNum">     105 </span>            :   /// [repository]</a>
+<a name="106"><span class="lineNum">     106 </span><span class="lineCov">          1 :   Future&lt;T&gt; updateModel(T model, {String? databaseName}) async {</span></a>
+<a name="107"><span class="lineNum">     107 </span><span class="lineCov">          1 :     final database = specificDatabase(databaseName);</span></a>
+<a name="108"><span class="lineNum">     108 </span>            : </a>
+<a name="109"><span class="lineNum">     109 </span><span class="lineCov">          1 :     final newModel = await database.saveModel&lt;T&gt;(model);</span></a>
+<a name="110"><span class="lineNum">     110 </span><span class="lineCov">          2 :     addLoadedModels([newModel]);</span></a>
+<a name="111"><span class="lineNum">     111 </span>            :     return newModel;</a>
+<a name="112"><span class="lineNum">     112 </span>            :   }</a>
+<a name="113"><span class="lineNum">     113 </span>            : }</a>
 </pre>
       </td>
     </tr>

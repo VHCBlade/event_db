@@ -1,3 +1,8 @@
+## 0.1.10
+
+- Added Search function with a default implementation to DatabaseRepository
+- Added more tests for better coverage
+
 ## 0.1.9
 
 - Added explicit dynamic to the Getters and Setters in GenericModel

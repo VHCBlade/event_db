@@ -13,7 +13,80 @@ void main() {
     test('Save And Find', saveAndFindTest);
     test('Delete', deleteTest);
     test('Find All Models Of Type', findAllModelsOfType);
+    test('Find Models', findModelsTest);
+    test('Missing Constructor', missingConstructorTest);
   });
+}
+
+void missingConstructorTest() {
+  final fakeRepository = FakeDatabaseRepository(constructors: {});
+
+  expect(
+    () => fakeRepository.saveModel<ExampleModel>(
+      'database',
+      ExampleModel()..dateTime = DateTime(1999),
+    ),
+    throwsArgumentError,
+  );
+}
+
+Future<void> findModelsTest() async {
+  final repository = FakeDatabaseRepository(constructors: constructors)
+    ..saveModel(
+      'Stab',
+      ExampleModel()
+        ..dateTime = DateTime(1998)
+        ..id = '1',
+    )
+    ..saveModel(
+      'Stab',
+      ExampleModel()
+        ..dateTime = DateTime(1999)
+        ..id = '2',
+    )
+    ..saveModel(
+      'Stab',
+      ExampleModel()
+        ..dateTime = DateTime(2000)
+        ..id = '3',
+    )
+    ..saveModel(
+      'Stab',
+      ExampleModel()
+        ..dateTime = DateTime(2001)
+        ..id = '4',
+    );
+
+  expect(
+    (await repository.findModels<ExampleModel>('Stab', []))
+        .map((e) => e.dateTime)
+        .toSet(),
+    const <DateTime>{},
+  );
+  expect(
+    (await repository.findModels<ExampleModel>('Stab', ['none']))
+        .map((e) => e.dateTime)
+        .toSet(),
+    const <DateTime>{},
+  );
+  expect(
+    (await repository.findModels<ExampleModel>('Stab', ['1', '2']))
+        .map((e) => e.dateTime)
+        .toSet(),
+    {DateTime(1998), DateTime(1999)},
+  );
+  expect(
+    (await repository.findModels<ExampleModel>('Stab', ['3', '4']))
+        .map((e) => e.dateTime)
+        .toSet(),
+    {DateTime(2000), DateTime(2001)},
+  );
+  expect(
+    (await repository.findModels<ExampleModel>('Stab', ['1', '2', '3', '4']))
+        .map((e) => e.dateTime)
+        .toSet(),
+    {DateTime(1998), DateTime(1999), DateTime(2000), DateTime(2001)},
+  );
 }
 
 void findAllModelsOfType() {
