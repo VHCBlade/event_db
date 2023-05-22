@@ -116,4 +116,27 @@ class SpecificDatabase {
     Iterable<String> keys,
   ) =>
       database.findModels<T>(databaseName, keys);
+
+  /// Finds all models in [databaseName] that have values that match the passed
+  /// [model]'s values
+  ///
+  /// Only values that are mapped to keys in [fields] will be considered.
+  ///
+  /// The default implementation is to call [findAllModelsOfType]s and then
+  /// perform a comparison individiually.
+  ///
+  /// A concrete implementation with a more efficient way of doing this should
+  /// override this function.
+  FutureOr<Iterable<T>> searchByModelAndFields<T extends GenericModel>(
+    T Function() supplier,
+    T model,
+    List<String> fields,
+  ) async {
+    return await database.searchByModelAndFields(
+      databaseName,
+      supplier,
+      model,
+      fields,
+    );
+  }
 }

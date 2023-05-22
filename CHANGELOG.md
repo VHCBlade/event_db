@@ -1,3 +1,7 @@
+## 0.1.10+1
+
+- Added search function to SpecificDatabase
+
 ## 0.1.10
 
 - Added fieldsToEvaluate and hasSameFields functions to GenericModel
