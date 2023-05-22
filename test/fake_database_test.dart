@@ -15,7 +15,103 @@ void main() {
     test('Find All Models Of Type', findAllModelsOfType);
     test('Find Models', findModelsTest);
     test('Missing Constructor', missingConstructorTest);
+    test('searchByModelAndFields', searchByModelAndFields);
   });
+}
+
+Future<void> searchByModelAndFields() async {
+  final repository = FakeDatabaseRepository(constructors: constructors)
+    ..saveModel(
+      'Stab',
+      ExampleModel()
+        ..dateTime = DateTime(1998)
+        ..myEnum = ExampleEnum.no
+        ..idSuffix = '1',
+    )
+    ..saveModel(
+      'Stab',
+      ExampleModel()
+        ..dateTime = DateTime(1998)
+        ..object = 'a'
+        ..myEnum = ExampleEnum.yes
+        ..idSuffix = '2',
+    )
+    ..saveModel(
+      'Stab',
+      ExampleModel()
+        ..dateTime = DateTime(2000)
+        ..myEnum = ExampleEnum.no
+        ..idSuffix = '3',
+    )
+    ..saveModel(
+      'Stab',
+      ExampleModel()
+        ..dateTime = DateTime(2000)
+        ..object = 'a'
+        ..idSuffix = '4',
+    );
+
+  final model = ExampleModel()
+    ..myEnum = ExampleEnum.no
+    ..dateTime = DateTime(1998);
+
+  expect(
+    (await repository.searchByModelAndFields(
+      'Stab',
+      ExampleModel.new,
+      model,
+      ['dateTime'],
+    ))
+        .map((e) => e.idSuffix)
+        .toSet(),
+    {'1', '2'},
+  );
+  expect(
+    (await repository.searchByModelAndFields(
+      'Stab',
+      ExampleModel.new,
+      model,
+      ['dateTime', 'enum'],
+    ))
+        .map((e) => e.idSuffix)
+        .toSet(),
+    {'1'},
+  );
+  expect(
+    (await repository.searchByModelAndFields(
+      'Stab',
+      ExampleModel.new,
+      model,
+      ['enum'],
+    ))
+        .map((e) => e.idSuffix)
+        .toSet(),
+    {'1', '3'},
+  );
+  model.myEnum = ExampleEnum.yes;
+  expect(
+    (await repository.searchByModelAndFields(
+      'Stab',
+      ExampleModel.new,
+      model,
+      ['enum'],
+    ))
+        .map((e) => e.idSuffix)
+        .toSet(),
+    {'2'},
+  );
+  model.myEnum = null;
+  expect(
+    (await repository.searchByModelAndFields(
+      'Stab',
+      ExampleModel.new,
+      model,
+      ['enum'],
+    ))
+        .map((e) => e.idSuffix)
+        .toSet(),
+    {'4'},
+  );
 }
 
 void missingConstructorTest() {

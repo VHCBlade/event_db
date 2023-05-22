@@ -42,6 +42,31 @@ abstract class DatabaseRepository extends Repository {
           .where((element) => element != null)
           .map((e) => e!)
           .toList();
+
+  /// Finds all models in [database] that have values that match the passed
+  /// [model]'s values
+  ///
+  /// Only values that are mapped to keys in [fields] will be considered.
+  ///
+  /// The default implementation is to call [findAllModelsOfType]s and then
+  /// perform a comparison individiually.
+  ///
+  /// A concrete implementation with a more efficient way of doing this should
+  /// override this function.
+  FutureOr<Iterable<T>> searchByModelAndFields<T extends GenericModel>(
+    String database,
+    T Function() supplier,
+    T model,
+    List<String> fields,
+  ) async {
+    final values = await findAllModelsOfType(database, supplier);
+    return values.where(
+      (element) => model.hasSameFields(
+        model: element,
+        onlyFields: fields,
+      ),
+    );
+  }
 }
 
 /// Wraps a [DatabaseRepository] with all of the databaseFunctions having a

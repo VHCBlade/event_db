@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:tuple/tuple.dart';
 import 'package:uuid/uuid.dart';
 
@@ -6,6 +7,8 @@ typedef Getter<T> = T Function();
 
 /// Setter function to set a field in a [GenericModel]
 typedef Setter<T> = void Function(T value);
+final bool Function(dynamic, dynamic) _equality =
+    const DeepCollectionEquality(DefaultEquality<dynamic>()).equals;
 
 /// Base Class to be extended by
 abstract class GenericModel {
@@ -71,7 +74,7 @@ abstract class GenericModel {
   ///
   /// [onlyFields] and [exceptFields] can be used to limit the fields that are
   /// copied. The two are mutually exclusive and an error will be thrown if both
-  /// a specified.
+  /// are specified.
   void copy<T extends GenericModel>(
     T model, {
     bool allowDifferentTypes = false,
@@ -79,24 +82,14 @@ abstract class GenericModel {
     Iterable<String>? onlyFields,
     Iterable<String>? exceptFields,
   }) {
-    assert(
-      onlyFields == null || exceptFields == null,
-      'onlyFields and exceptFields cannot both be specified at the same time',
-    );
     if (!allowDifferentTypes) {
       assert(
         type == model.type,
         'Types do not match! ("$type" and "${model.type}")',
       );
     }
-    getterSetterMap.keys
+    fieldsToEvaluate(onlyFields, exceptFields)
         .where((element) {
-          if (onlyFields != null) {
-            return onlyFields.contains(element);
-          }
-          if (exceptFields != null) {
-            return !exceptFields.contains(element);
-          }
           if (element == ID) {
             return copyId;
           }
@@ -107,6 +100,50 @@ abstract class GenericModel {
           getterSetterMap[element]!
               .item2(model.getterSetterMap[element]!.item1());
         });
+  }
+
+  /// Returns whether the given [model] has the same given fields as this model.
+  ///
+  /// [onlyFields] and [exceptFields] can be used to limit the fields that are
+  /// compared. The two are mutually exclusive and an error will be thrown if
+  /// both are specified.
+  bool hasSameFields<T extends GenericModel>({
+    required T model,
+    Iterable<String>? onlyFields,
+    Iterable<String>? exceptFields,
+  }) {
+    return fieldsToEvaluate(onlyFields, exceptFields)
+        .map(
+          (e) => _equality(
+            getterSetterMap[e]?.item1(),
+            model.getterSetterMap[e]?.item1(),
+          ),
+        )
+        .reduce((value, element) => value && element);
+  }
+
+  /// Returns the fields that exist in this model.
+  ///
+  /// [onlyFields] and [exceptFields] can be used to limit the fields that are
+  /// evaluated. The two are mutually exclusive and an error will be thrown if
+  /// both are specified.
+  Iterable<String> fieldsToEvaluate<T extends GenericModel>(
+    Iterable<String>? onlyFields,
+    Iterable<String>? exceptFields,
+  ) {
+    assert(
+      onlyFields == null || exceptFields == null,
+      'onlyFields and exceptFields cannot both be specified at the same time',
+    );
+    return getterSetterMap.keys.where((element) {
+      if (onlyFields != null) {
+        return onlyFields.contains(element);
+      }
+      if (exceptFields != null) {
+        return !exceptFields.contains(element);
+      }
+      return true;
+    });
   }
 
   /// Returns [id] if that value is not null. Otherwise will automatically

@@ -1,5 +1,6 @@
 ## 0.1.10
 
+- Added fieldsToEvaluate and hasSameFields functions to GenericModel
 - Added Search function with a default implementation to DatabaseRepository
 - Added more tests for better coverage
 
