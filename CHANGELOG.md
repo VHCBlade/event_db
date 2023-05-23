@@ -1,3 +1,7 @@
+## 0.1.11
+
+- Added JsonStringModel to make working with jsonStrings easier.
+
 ## 0.1.10+1
 
 - Added search function to SpecificDatabase
