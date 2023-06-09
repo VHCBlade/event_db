@@ -71,6 +71,16 @@ void main() {
         expect(model2.object, model.object);
         expect(model2.id, model.id);
       });
+      test('Type Mismatch', () {
+        final model = ExampleModel();
+        final model2 = ExampleCompoundModel();
+
+        model
+          ..id = '20'
+          ..object = 'cool';
+
+        expect(() => model2.copy(model), throwsA(isA<FormatException>()));
+      });
       test('Only Fields', () {
         final model = ExampleModel();
         final model2 = ExampleModel();

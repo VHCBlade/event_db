@@ -84,6 +84,20 @@ void main() {
 
         expect(model2.map['0']!.object, isNot(model.map['0']!.object));
       });
+      test('Type Exception', () {
+        final model = ExampleCompoundModel()..model = ExampleModel();
+        final model2 = ExampleModel();
+
+        model.id = '20';
+        model.model.id = 'cool';
+        model.model.object = 'cool';
+        model.model.myEnum = ExampleEnum.yes;
+
+        expect(
+          () => model2.loadFromMap(model.toMap()),
+          throwsA(isA<FormatException>()),
+        );
+      });
     });
   });
 }

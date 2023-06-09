@@ -55,11 +55,11 @@ abstract class GenericModel {
   /// You can generate a value that can be passed into this by using [toMap]
   ///
   /// [respectType] will make a check to ensure that the TYPE entry is the same
-  /// if true. This will throw an [ArgumentError] if they're not the same
+  /// if true. This will throw an [FormatException] if they're not the same
   void loadFromMap(Map<String, dynamic> map, {bool respectType = true}) {
     if (respectType && map.containsKey(TYPE)) {
       if (map[TYPE] != type) {
-        throw ArgumentError('Type in $map does not match $type');
+        throw FormatException('Type in $map does not match $type');
       }
     }
     getterSetterMap.keys
@@ -70,7 +70,7 @@ abstract class GenericModel {
   ///
   /// If [allowDifferentTypes] is true, the method will continue even if the
   /// types and fields in [model] and myself are different. Otherwise,
-  /// differences will be met with an error.
+  /// differences will be met with a [FormatException].
   ///
   /// [onlyFields] and [exceptFields] can be used to limit the fields that are
   /// copied. The two are mutually exclusive and an error will be thrown if both
@@ -83,10 +83,11 @@ abstract class GenericModel {
     Iterable<String>? exceptFields,
   }) {
     if (!allowDifferentTypes) {
-      assert(
-        type == model.type,
-        'Types do not match! ("$type" and "${model.type}")',
-      );
+      if (type != model.type) {
+        throw FormatException(
+          'Types do not match! ("$type" and "${model.type}")',
+        );
+      }
     }
     fieldsToEvaluate(onlyFields, exceptFields)
         .where((element) {
