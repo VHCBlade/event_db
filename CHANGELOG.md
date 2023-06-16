@@ -1,7 +1,7 @@
 ## 0.1.13
 
 - Added JsonMap extension for reading values from maps.
-- Added Validator
+- Added Validator and ValidatorCollection
 - Added corresponding unit tests.
 
 ## 0.1.12
