@@ -1,0 +1,14 @@
+[
+  "[\"type\",\"object\",\"enum\",\"model\"]",
+  "[\"object is required!\",\"enum is required!\",\"model is required!\"]",
+  "[\"map\",\"map.amazing\",\"map.amazing.dateTime\"]",
+  "[\"map is required!\",\"map.amazing is required!\",\"map.amazing.dateTime is required!\"]",
+  "[\"map.amazing.enum\"]",
+  "[\"map.amazing.enum is required!\"]",
+  "[\"list.0.type\",\"list.0\"]",
+  "[\"list.0.type is required!\",\"list.0 is required!\"]",
+  "[\"list.0.dateTime\",\"list.1.type\",\"list\"]",
+  "[\"list.0.dateTime is required!\",\"list.1.type is required!\",\"list is required!\"]",
+  "[\"name\",\"ordinal\",\"id\"]",
+  "[\"id is required!\"]"
+]

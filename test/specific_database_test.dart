@@ -14,7 +14,99 @@ void main() {
     test('Delete', deleteTest);
     test('Find All Models Of Type', findAllModelsOfType);
     test('Find Models', findModelsTest);
+    test('Search By Model And Fields', searchByModelAndFields);
   });
+}
+
+Future<void> searchByModelAndFields() async {
+  final repository = FakeDatabaseRepository(constructors: constructors)
+    ..saveModel(
+      'Stab',
+      ExampleModel()
+        ..dateTime = DateTime(1998)
+        ..myEnum = ExampleEnum.no
+        ..idSuffix = '1',
+    )
+    ..saveModel(
+      'Stab',
+      ExampleModel()
+        ..dateTime = DateTime(1998)
+        ..object = 'a'
+        ..myEnum = ExampleEnum.yes
+        ..idSuffix = '2',
+    )
+    ..saveModel(
+      'Stab',
+      ExampleModel()
+        ..dateTime = DateTime(2000)
+        ..myEnum = ExampleEnum.no
+        ..idSuffix = '3',
+    )
+    ..saveModel(
+      'Stab',
+      ExampleModel()
+        ..dateTime = DateTime(2000)
+        ..object = 'a'
+        ..idSuffix = '4',
+    );
+  final database = SpecificDatabase(repository, 'Stab');
+
+  final model = ExampleModel()
+    ..myEnum = ExampleEnum.no
+    ..dateTime = DateTime(1998);
+
+  expect(
+    (await database.searchByModelAndFields(
+      ExampleModel.new,
+      model,
+      ['dateTime'],
+    ))
+        .map((e) => e.idSuffix)
+        .toSet(),
+    {'1', '2'},
+  );
+  expect(
+    (await database.searchByModelAndFields(
+      ExampleModel.new,
+      model,
+      ['dateTime', 'enum'],
+    ))
+        .map((e) => e.idSuffix)
+        .toSet(),
+    {'1'},
+  );
+  expect(
+    (await database.searchByModelAndFields(
+      ExampleModel.new,
+      model,
+      ['enum'],
+    ))
+        .map((e) => e.idSuffix)
+        .toSet(),
+    {'1', '3'},
+  );
+  model.myEnum = ExampleEnum.yes;
+  expect(
+    (await database.searchByModelAndFields(
+      ExampleModel.new,
+      model,
+      ['enum'],
+    ))
+        .map((e) => e.idSuffix)
+        .toSet(),
+    {'2'},
+  );
+  model.myEnum = null;
+  expect(
+    (await database.searchByModelAndFields(
+      ExampleModel.new,
+      model,
+      ['enum'],
+    ))
+        .map((e) => e.idSuffix)
+        .toSet(),
+    {'4'},
+  );
 }
 
 Future<void> findModelsTest() async {

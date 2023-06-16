@@ -59,4 +59,5 @@ void readTest() {
 
   expect(compound.toMap().read<String>('model.enum'), 'no');
   expect(compound.toMap().read<String>('model.type'), 'example');
+  expect(() => compound.toMap().read<int>('model.enum'), throwsArgumentError);
 }

@@ -1,0 +1,20 @@
+[
+  "\"17\"",
+  "\"Passed\"",
+  "\"int must be between -7 and 8!\"",
+  "\"7.25\"",
+  "\"Passed\"",
+  "\"double must be between -7.25 and 7.24!\"",
+  "\"null\"",
+  "\"Passed\"",
+  "\"Passed\"",
+  "\"17.25\"",
+  "\"Passed\"",
+  "\"double must be between -7.25 and 7.24!\"",
+  "\"7\"",
+  "\"Passed\"",
+  "\"Passed\"",
+  "\"-7.25\"",
+  "\"double must be between 7.25 and 17.25!\"",
+  "\"Passed\""
+]

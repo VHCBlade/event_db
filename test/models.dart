@@ -7,6 +7,21 @@ enum ExampleEnum {
   ;
 }
 
+class NumberModel extends GenericModel {
+  int? intVal;
+  double? doubleVal;
+
+  @override
+  Map<String, Tuple2<Getter<dynamic>, Setter<dynamic>>> getGetterSetterMap() =>
+      {
+        'int': Tuple2(() => intVal, (val) => intVal = val as int?),
+        'double': Tuple2(() => doubleVal, (val) => doubleVal = val as double?),
+      };
+
+  @override
+  String get type => 'example';
+}
+
 class ExampleModel extends GenericModel {
   String? object;
   ExampleEnum? myEnum;

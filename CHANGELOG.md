@@ -1,3 +1,9 @@
+## 0.1.13
+
+- Added JsonMap extension for reading values from maps.
+- Added Validator
+- Added corresponding unit tests.
+
 ## 0.1.12
 
 - Changed ArgumentErrors and AssertionErrors thrown by type mismatches in GenericModel throw a FormatException instead.
