@@ -280,4 +280,13 @@ abstract class GenericModel {
     Setter<T?> setter,
   ) =>
       Tuple2(() => getter(), (val) => setter(val as T?));
+
+  /// Takes the pair of [Getter] and [Setter] for a primitive and puts them in
+  /// a [Tuple2]. Convenience function if you don't want to rely on the tuple
+  /// package directly.
+  static Tuple2<Getter<dynamic>, Setter<dynamic>> number(
+    Getter<num?> getter,
+    Setter<num?> setter,
+  ) =>
+      Tuple2(() => getter(), (val) => setter(val as num?));
 }

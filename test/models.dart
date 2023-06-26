@@ -14,8 +14,12 @@ class NumberModel extends GenericModel {
   @override
   Map<String, Tuple2<Getter<dynamic>, Setter<dynamic>>> getGetterSetterMap() =>
       {
-        'int': Tuple2(() => intVal, (val) => intVal = val as int?),
-        'double': Tuple2(() => doubleVal, (val) => doubleVal = val as double?),
+        'int':
+            GenericModel.number(() => intVal, (val) => intVal = val?.toInt()),
+        'double': GenericModel.number(
+          () => doubleVal,
+          (val) => doubleVal = val?.toDouble(),
+        ),
       };
 
   @override

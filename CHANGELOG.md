@@ -1,3 +1,7 @@
+## 0.1.14
+
+- Added GenericModel.number to make handling numbers easier and more consistent.
+
 ## 0.1.13
 
 - Added JsonMap extension for reading values from maps.

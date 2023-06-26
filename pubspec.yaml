@@ -1,6 +1,6 @@
 name: event_db
 description: A companion package for handling models and databases using the event bloc.
-version: 0.1.13
+version: 0.1.14
 repository: https://github.com/VHCBlade/event_db
 
 environment:
@@ -24,6 +24,6 @@ dev_dependencies:
     sdk: flutter
 
   test: ^1.21.0
-  very_good_analysis: ^4.0.0
+  very_good_analysis: ^5.0.0
 
 flutter:
