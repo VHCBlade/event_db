@@ -1,3 +1,7 @@
+## 0.1.15
+
+- Added PastDateTimeValidator
+
 ## 0.1.14
 
 - Added GenericModel.number to make handling numbers easier and more consistent.

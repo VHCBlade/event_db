@@ -8,6 +8,7 @@ void main() {
   group('RequiredValidator', requiredTest);
   group('ValidatorCollection', validatorCollectionTest);
   group('NumRangeValidator', numRangeTest);
+  group('PastDateTimeValidator', pastDateTimeTest);
 }
 
 void validatorCollectionTest() {
@@ -132,6 +133,25 @@ void requiredTest() {
   ).runTests();
 }
 
+void pastDateTimeTest() {
+  SerializableListTester<DateTime?>(
+    testGroupName: 'PastDateTimeValidator',
+    mainTestName: 'Assert',
+    mode: ListTesterMode.auto,
+    testFunction: (value, tester) async {
+      try {
+        const PastDateTimeValidator('DateTime').assertValidate(
+          {'DateTime': value?.microsecondsSinceEpoch},
+        );
+        tester.addTestValue('Passed');
+      } on ValidationException catch (e) {
+        tester.addTestValue(e.message);
+      }
+    },
+    testMap: dateTimeTestCases,
+  ).runTests();
+}
+
 final testCases = {
   'Example': () => ExampleModel()
     ..object = 'Amazing'
@@ -168,4 +188,12 @@ final numTestCases = {
           ..intVal = 7
           ..doubleVal = -7.25,
       ]
+};
+
+final dateTimeTestCases = {
+  'Null': () => null,
+  'Far Past': () => DateTime.now().subtract(const Duration(days: 365)),
+  'Near Past': () => DateTime.now().subtract(const Duration(seconds: 60)),
+  'Near Future': () => DateTime.now().add(const Duration(seconds: 60)),
+  'Far Future': () => DateTime.now().add(const Duration(days: 365)),
 };
