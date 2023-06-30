@@ -146,6 +146,34 @@ void main() {
     });
 
     group('hasSameFields', hasSameFieldsTest);
+    group('getterSetter Assertion', getterSetterAssertionTest);
+  });
+}
+
+class _FakeIdModel extends GenericModel {
+  @override
+  Map<String, Tuple2<Getter<dynamic>, Setter<dynamic>>> getGetterSetterMap() =>
+      {GenericModel.ID: Tuple2(() => 'cool', (val) => '')};
+
+  @override
+  String get type => 'Cool';
+}
+
+class _FakeTypeModel extends GenericModel {
+  @override
+  Map<String, Tuple2<Getter<dynamic>, Setter<dynamic>>> getGetterSetterMap() =>
+      {GenericModel.TYPE: Tuple2(() => 'cool', (val) => '')};
+
+  @override
+  String get type => 'Cool';
+}
+
+void getterSetterAssertionTest() {
+  test('Type', () {
+    expect(() => _FakeIdModel()..toMap(), throwsA(isA<AssertionError>()));
+  });
+  test('ID', () {
+    expect(() => _FakeTypeModel()..toMap(), throwsA(isA<AssertionError>()));
   });
 }
 

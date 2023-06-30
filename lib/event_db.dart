@@ -1,6 +1,7 @@
 /// See GenericModel and DatabaseRepository for starting points
 library event_db;
 
+export 'src/exception.dart';
 export 'src/fake.dart';
 export 'src/json.dart';
 export 'src/model.dart';

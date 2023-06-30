@@ -1,3 +1,8 @@
+## 0.1.16
+
+- Added DatabaseException and an errorStream to DatabaseRepository
+- Added Unit Test for Assertions in GenericModel
+
 ## 0.1.15
 
 - Added PastDateTimeValidator

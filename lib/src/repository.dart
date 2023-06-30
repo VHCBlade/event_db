@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:event_bloc/event_bloc.dart';
+import 'package:event_db/src/exception.dart';
 import 'package:event_db/src/model.dart';
 
 /// Represents a class that implements some specific implementation of an
@@ -15,6 +16,10 @@ abstract class DatabaseRepository extends Repository {
     String database,
     T Function() supplier,
   );
+
+  /// Listen for [DatabaseException]s that occur from trying to access this
+  /// database.
+  late final errorStream = StreamController<DatabaseException>.broadcast();
 
   /// Finds the [T] model in [database] with id of [key].
   FutureOr<T?> findModel<T extends GenericModel>(String database, String key);
@@ -66,6 +71,12 @@ abstract class DatabaseRepository extends Repository {
         onlyFields: fields,
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    errorStream.close();
   }
 }
 
