@@ -8,6 +8,15 @@ import 'models.dart';
 
 void main() {
   group('Reorderable', () {
+    test('ListMovement', () {
+      final movement = ListMovement(
+        ExampleReorderableModel()..idSuffix = 'Amazing',
+        2,
+      );
+
+      expect(movement.moved.id, 'Reorderable::Amazing');
+      expect(movement.to, 2);
+    });
     group('Insert', insertTest);
     group('Move Down', moveDownTest);
     group('Move Up', moveUpTest);

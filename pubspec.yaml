@@ -10,10 +10,10 @@ dependencies:
   collection: ^1.17.0
   
   event_bloc: ^4.2.0
-
   flutter:
     sdk: flutter
 
+  test: ^1.21.0
   tuple: ^2.0.0
   uuid: ^3.0.7
 
@@ -23,7 +23,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  test: ^1.21.0
   very_good_analysis: ^5.0.0
 
 flutter:

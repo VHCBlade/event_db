@@ -2,7 +2,6 @@ import 'package:event_db/event_db.dart';
 
 /// Represents a map of [GenericModel]s with functions to automatically
 /// retrieve and save them in a [DatabaseRepository]
-// TODO(vhcblade): BP-32 https://trello.com/c/uj0uS1cO/32-bp-32-add-test-for-genericmodelmap-in-eventdb
 class GenericModelMap<T extends GenericModel> {
   /// Maintains a [map] for the [T] models with their id as their key.
   ///
