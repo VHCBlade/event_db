@@ -1,3 +1,4 @@
+import 'package:event_db/event_db.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'models.dart';
@@ -62,6 +63,12 @@ void main() {
         model.list[0].object = 'Great';
 
         expect(model2.list[0].object, isNot(model.list[0].object));
+
+        model2.loadFromJsonString(model.toJsonString());
+
+        expect(model2.list[0].object, model.list[0].object);
+        expect(model2.list[0].myEnum, model.list[0].myEnum);
+        expect(model2.list[0].id, model.list[0].id);
       });
       test('Model Map', () {
         final model = ExampleCompoundModel()..model = ExampleModel();
@@ -83,6 +90,12 @@ void main() {
         model.map['0']!.object = 'Great';
 
         expect(model2.map['0']!.object, isNot(model.map['0']!.object));
+
+        model2.loadFromJsonString(model.toJsonString());
+
+        expect(model2.map['0']!.object, model.map['0']!.object);
+        expect(model2.map['0']!.myEnum, model.map['0']!.myEnum);
+        expect(model2.map['0']!.id, model.map['0']!.id);
       });
       test('Type Exception', () {
         final model = ExampleCompoundModel()..model = ExampleModel();

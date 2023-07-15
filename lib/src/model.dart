@@ -231,8 +231,10 @@ abstract class GenericModel {
           Tuple2(
             () => getter()?.map((e) => e.toMap()).toList(),
             (val) => setter(
-              (val as List<Map<String, dynamic>>?)
-                  ?.map<T>((e) => supplier()..loadFromMap(e))
+              (val as List<dynamic>?)
+                  ?.map<T>(
+                    (e) => supplier()..loadFromMap(e as Map<String, dynamic>),
+                  )
                   .toList(),
             ),
           );

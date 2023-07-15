@@ -1,3 +1,7 @@
+## 0.1.17
+
+- Fixed GenericModel.modelList to work when serialized and deserialized
+
 ## 0.1.16
 
 - Added DatabaseException and an errorStream to DatabaseRepository
