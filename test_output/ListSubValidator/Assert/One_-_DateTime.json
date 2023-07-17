@@ -1,0 +1,8 @@
+[
+  "\"object\"",
+  "\"list failed specific validator for list element: object is required!\"",
+  "\"enum\"",
+  "\"list failed specific validator for list element: enum is required!\"",
+  "\"dateTime\"",
+  "\"Passed\""
+]

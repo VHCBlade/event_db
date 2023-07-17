@@ -14,7 +14,7 @@ abstract class Validator {
   bool validate(Map<String, dynamic> map);
 }
 
-///
+/// Runs a group of [Validator]s
 class ValidatorCollection {
   /// [validators] are all run simultaneously in [assertValidate]
   const ValidatorCollection(this.validators);

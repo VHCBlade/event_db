@@ -1,5 +1,38 @@
 import 'package:event_db/event_db.dart';
 
+/// Runs a [Validator] on each element in a given list.
+class ListSubValidator implements Validator {
+  /// [name] is traversed using [JsonMap.read] to find the base list
+  ///
+  /// [validator] is ran on each element in the sub list
+  const ListSubValidator(this.name, {required this.validator});
+
+  /// Ran on each element in the sub list
+  final Validator validator;
+
+  @override
+  final String name;
+
+  @override
+  String get message => 'failed specific validator for list element: '
+      '${validator.name} ${validator.message}';
+
+  @override
+  bool validate(Map<String, dynamic> map) {
+    final value = map.read<List<dynamic>>(name);
+    if (value == null) {
+      return true;
+    }
+
+    for (var i = 0; i < value.length; i++) {
+      if (!validator.validate(value[i] as Map<String, dynamic>)) {
+        return false;
+      }
+    }
+    return true;
+  }
+}
+
 /// Ensures that a list has a number of elements within a specific range.
 class ListSizeValidator implements Validator {
   /// [name] is traversed using [JsonMap.read] to find the base list

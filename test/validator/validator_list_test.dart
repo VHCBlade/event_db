@@ -7,10 +7,34 @@ import 'package:tuple/tuple.dart';
 import '../models.dart';
 
 void main() {
-  group('ListSizeValidator', requiredTest);
+  group('ListSizeValidator', listSizeTest);
+  group('ListSubValidator', listSubTest);
 }
 
-void requiredTest() {
+void listSubTest() {
+  SerializableListTester<GenericModel>(
+    testGroupName: 'ListSubValidator',
+    mainTestName: 'Assert',
+    mode: ListTesterMode.auto,
+    testFunction: (value, tester) async {
+      final list = ['object', 'enum', 'dateTime'];
+
+      for (final testCase in list) {
+        try {
+          tester.addTestValue(testCase);
+          ListSubValidator('list', validator: RequiredValidator(testCase))
+              .assertValidate(value.toMap());
+          tester.addTestValue('Passed');
+        } on ValidationException catch (e) {
+          tester.addTestValue(e.message);
+        }
+      }
+    },
+    testMap: listSubTestCases,
+  ).runTests();
+}
+
+void listSizeTest() {
   SerializableListTester<GenericModel>(
     testGroupName: 'ListSizeValidator',
     mainTestName: 'Assert',
@@ -61,4 +85,33 @@ final listTestCases = {
   'Ten': () => ExampleCompoundModel()
     ..model = ExampleModel()
     ..list = List.generate(10, (index) => ExampleModel()),
+};
+
+final listSubTestCases = {
+  'Empty': () => ExampleCompoundModel()
+    ..model = ExampleModel()
+    ..list = [],
+  'One - Enum': () => ExampleCompoundModel()
+    ..model = ExampleModel()
+    ..list = [ExampleModel()..myEnum = ExampleEnum.no],
+  'One - DateTime': () => ExampleCompoundModel()
+    ..model = ExampleModel()
+    ..list = [ExampleModel()..dateTime = DateTime(1990)],
+  'Two - Object': () => ExampleCompoundModel()
+    ..model = ExampleModel()
+    ..list = [
+      ExampleModel()
+        ..dateTime = DateTime(1990)
+        ..object = 'Great',
+      ExampleModel()..object = 'Amazing',
+    ],
+  'Two - Enum': () => ExampleCompoundModel()
+    ..model = ExampleModel()
+    ..list = [
+      ExampleModel()
+        ..dateTime = DateTime(1990)
+        ..object = 'Great'
+        ..myEnum = ExampleEnum.yes,
+      ExampleModel()..myEnum = ExampleEnum.no,
+    ],
 };
