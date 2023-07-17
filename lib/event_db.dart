@@ -10,6 +10,7 @@ export 'src/reorderable.dart';
 export 'src/repository.dart';
 
 export 'src/validator/date_time.dart';
+export 'src/validator/list.dart';
 export 'src/validator/num.dart';
 export 'src/validator/required.dart';
 export 'src/validator/validator.dart';
