@@ -1,3 +1,7 @@
+## 0.1.18
+
+- Moved validator to its own subfolder and divided the validator into distinct files
+
 ## 0.1.17
 
 - Fixed GenericModel.modelList to work when serialized and deserialized

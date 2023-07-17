@@ -8,4 +8,8 @@ export 'src/model.dart';
 export 'src/model_map.dart';
 export 'src/reorderable.dart';
 export 'src/repository.dart';
-export 'src/validator.dart';
+
+export 'src/validator/date_time.dart';
+export 'src/validator/num.dart';
+export 'src/validator/required.dart';
+export 'src/validator/validator.dart';
