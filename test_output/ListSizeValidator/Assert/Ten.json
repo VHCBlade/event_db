@@ -1,0 +1,18 @@
+[
+  "\"[0, null]\"",
+  "\"Passed\"",
+  "\"[0, 20]\"",
+  "\"Passed\"",
+  "\"[0, 5]\"",
+  "\"list does not contain the required number of elements 0 - 5\"",
+  "\"[1, 5]\"",
+  "\"list does not contain the required number of elements 1 - 5\"",
+  "\"[2, 5]\"",
+  "\"list does not contain the required number of elements 2 - 5\"",
+  "\"[3, 10]\"",
+  "\"Passed\"",
+  "\"[5, 12]\"",
+  "\"Passed\"",
+  "\"[6, 10]\"",
+  "\"Passed\""
+]

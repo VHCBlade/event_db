@@ -1,6 +1,7 @@
 ## 0.1.18
 
 - Moved validator to its own subfolder and divided the validator into distinct files
+- Added ListSizeValidator
 
 ## 0.1.17
 

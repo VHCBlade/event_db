@@ -2,7 +2,7 @@ import 'package:event_bloc_tester/event_bloc_tester.dart';
 import 'package:event_db/event_db.dart';
 import 'package:test/test.dart';
 
-import 'models.dart';
+import '../models.dart';
 
 void main() {
   group('RequiredValidator', requiredTest);
