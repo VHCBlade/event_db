@@ -1,6 +1,6 @@
 name: event_db
 description: A companion package for handling models and databases using the event bloc.
-version: 0.1.17
+version: 0.1.18
 repository: https://github.com/VHCBlade/event_db
 
 environment:
