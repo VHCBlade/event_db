@@ -1,3 +1,7 @@
+## 0.1.19
+
+- Added validator/list.dart to exported libraries
+
 ## 0.1.18
 
 - Moved validator to its own subfolder and divided the validator into distinct files

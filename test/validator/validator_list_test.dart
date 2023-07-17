@@ -1,6 +1,5 @@
 import 'package:event_bloc_tester/event_bloc_tester.dart';
 import 'package:event_db/event_db.dart';
-import 'package:event_db/src/validator/list.dart';
 import 'package:test/test.dart';
 import 'package:tuple/tuple.dart';
 
