@@ -34,6 +34,21 @@ abstract class DatabaseRepository extends Repository {
   /// just be overridden
   FutureOr<T> saveModel<T extends GenericModel>(String database, T model);
 
+  /// Saves the [T] [models] in [database]. [models] that do not have an
+  /// existing id will have one automatically assigned to them. This function
+  /// doesn't care if there is an already existing model or not. Existing models
+  /// will just be overridden
+  ///
+  /// The default implementation will simply call [saveModel] multiple times.
+  /// A concrete implementation with a more efficient way of doing this should
+  /// override this function.
+  FutureOr<void> saveModels<T extends GenericModel>(
+    String database,
+    Iterable<T> models,
+  ) async {
+    await Future.wait(models.map((e) async => saveModel(database, e)));
+  }
+
   /// Finds all the models in the given [database] that have the given [keys]
   ///
   /// The default implementation simply calls [findModel] multiple times.
@@ -121,6 +136,17 @@ class SpecificDatabase {
   /// models will just be overridden
   FutureOr<T> saveModel<T extends GenericModel>(T model) =>
       database.saveModel(databaseName, model);
+
+  /// Saves the [T] [models] in [databaseName]. [models] that do not have an
+  /// existing id will have one automatically assigned to them. This function
+  /// doesn't care if there is an already existing model or not. Existing models
+  /// will just be overridden
+  ///
+  /// The default implementation will simply call [saveModel] multiple times.
+  /// A concrete implementation with a more efficient way of doing this should
+  /// override this function.
+  FutureOr<void> saveModels<T extends GenericModel>(Iterable<T> models) =>
+      database.saveModels(databaseName, models);
 
   /// Finds all the models in [databaseName] that have the given [keys]
   FutureOr<Iterable<T>> findModels<T extends GenericModel>(

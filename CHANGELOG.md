@@ -1,3 +1,7 @@
+## 0.1.20
+
+- Added saveModels function to DatabaseRepository and SpecificDatabase with default implementation
+
 ## 0.1.19
 
 - Added validator/list.dart to exported libraries

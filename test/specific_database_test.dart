@@ -14,6 +14,7 @@ void main() {
     test('Delete', deleteTest);
     test('Find All Models Of Type', findAllModelsOfType);
     test('Find Models', findModelsTest);
+    test('Save Models', saveModelsTest);
     test('Search By Model And Fields', searchByModelAndFields);
   });
 }
@@ -106,6 +107,58 @@ Future<void> searchByModelAndFields() async {
         .map((e) => e.idSuffix)
         .toSet(),
     {'4'},
+  );
+}
+
+Future<void> saveModelsTest() async {
+  final repository = FakeDatabaseRepository(constructors: constructors);
+  final database = SpecificDatabase(repository, 'Stab')
+    ..saveModels(
+      [
+        ExampleModel()
+          ..dateTime = DateTime(1998)
+          ..id = '1',
+        ExampleModel()
+          ..dateTime = DateTime(1999)
+          ..id = '2',
+        ExampleModel()
+          ..dateTime = DateTime(2000)
+          ..id = '3',
+        ExampleModel()
+          ..dateTime = DateTime(2001)
+          ..id = '4',
+      ],
+    );
+
+  expect(
+    (await database.findModels<ExampleModel>([]))
+        .map((e) => e.dateTime)
+        .toSet(),
+    const <DateTime>{},
+  );
+  expect(
+    (await database.findModels<ExampleModel>(['none']))
+        .map((e) => e.dateTime)
+        .toSet(),
+    const <DateTime>{},
+  );
+  expect(
+    (await database.findModels<ExampleModel>(['1', '2']))
+        .map((e) => e.dateTime)
+        .toSet(),
+    {DateTime(1998), DateTime(1999)},
+  );
+  expect(
+    (await database.findModels<ExampleModel>(['3', '4']))
+        .map((e) => e.dateTime)
+        .toSet(),
+    {DateTime(2000), DateTime(2001)},
+  );
+  expect(
+    (await database.findModels<ExampleModel>(['1', '2', '3', '4']))
+        .map((e) => e.dateTime)
+        .toSet(),
+    {DateTime(1998), DateTime(1999), DateTime(2000), DateTime(2001)},
   );
 }
 
