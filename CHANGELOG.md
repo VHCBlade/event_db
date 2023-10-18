@@ -1,3 +1,8 @@
+## 0.1.21
+
+- Added getField and setField function to GenericModel
+- Changed copy and hasSameFields to use the newly added functions
+
 ## 0.1.20
 
 - Added saveModels function to DatabaseRepository and SpecificDatabase with default implementation

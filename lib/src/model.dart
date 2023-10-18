@@ -97,10 +97,7 @@ abstract class GenericModel {
           return true;
         })
         .where((element) => model.getterSetterMap.keys.contains(element))
-        .forEach((element) {
-          getterSetterMap[element]!
-              .item2(model.getterSetterMap[element]!.item1());
-        });
+        .forEach((element) => setField(element, model.getField(element)));
   }
 
   /// Returns whether the given [model] has the same given fields as this model.
@@ -115,12 +112,26 @@ abstract class GenericModel {
   }) {
     return fieldsToEvaluate(onlyFields, exceptFields)
         .map(
-          (e) => _equality(
-            getterSetterMap[e]?.item1(),
-            model.getterSetterMap[e]?.item1(),
-          ),
+          (e) => _equality(getField(e), model.getField(e)),
         )
         .reduce((value, element) => value && element);
+  }
+
+  /// Returns the value of the field with name [key] or null if [key] is not a
+  /// field in this model.
+  dynamic getField(String key) {
+    return getterSetterMap[key]?.item1();
+  }
+
+  /// Sets the field with name [key] to the given [value]
+  ///
+  /// Returns true if successful and false if the [key] doesn't exist.
+  bool setField(String key, dynamic value) {
+    if (!getterSetterMap.containsKey(key)) {
+      return false;
+    }
+    getterSetterMap[key]!.item2(value);
+    return true;
   }
 
   /// Returns the fields that exist in this model.
