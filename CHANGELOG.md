@@ -1,9 +1,15 @@
+## 0.2.0
+
+- BREAKING CHANGE: Changed all references to GenericModel to instead reference BaseModel
+- Added MappableFields typedef and MapFieldsExtension to make using the getterSetterMap more convenient
+- Added MappableModel which implements BaseModel and changed GenericModel to extend that instead
+
 ## 0.1.23
 
 - Refactored GenericModel to implement newly created BaseModel instead.
 - Moved GenericModel ID functions to BaseModelIDExtension (thus they can no longer be overwritten)
 - Moved GenericModel Field functions to BaseModelFieldExtension (thus they can no longer be overwritten)
-- Changed all references to GenericModel to instead reference BaseModel
+- Changed all references to GenericModel to instead reference BaseModel -- This is a breaking change, either upgrade to 0.2.0 or downgrade to 0.1.22 if needed.
 
 ## 0.1.22
 

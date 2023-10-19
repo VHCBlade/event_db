@@ -1,8 +1,9 @@
 import 'package:event_db/event_db.dart';
+import 'package:event_db/src/model/mappable.dart';
 import 'package:tuple/tuple.dart';
 
 /// Base Class to be extended by
-abstract class GenericModel implements BaseModel {
+abstract class GenericModel extends MappableModel {
   /// The key for [type] in the result of [toMap]
   static const TYPE = 'type';
 
@@ -22,10 +23,8 @@ abstract class GenericModel implements BaseModel {
 
   @override
   Map<String, dynamic> toMap() {
-    final map = <String, dynamic>{};
+    final map = getterSetterMap.createMap();
     map[TYPE] = type;
-    getterSetterMap.keys
-        .forEach((element) => map[element] = getterSetterMap[element]!.item1());
 
     return map;
   }
@@ -37,25 +36,7 @@ abstract class GenericModel implements BaseModel {
         throw FormatException('Type in $map does not match $type');
       }
     }
-    getterSetterMap.keys
-        .forEach((element) => getterSetterMap[element]!.item2(map[element]));
-  }
-
-  /// Used by [toMap] to generate the map
-  late final Map<String, Tuple2<Getter<dynamic>, Setter<dynamic>>>
-      getterSetterMap = _getterSetterMap;
-  Map<String, Tuple2<Getter<dynamic>, Setter<dynamic>>> get _getterSetterMap {
-    final getterSetterMap = getGetterSetterMap();
-    assert(
-      !getterSetterMap.containsKey(TYPE),
-      '"$TYPE" is already used by GenericModel. Do not use it for extensions',
-    );
-    assert(
-      !getterSetterMap.containsKey(ID),
-      '"$ID" is already used by GenericModel. Do not use it for extensions',
-    );
-    getterSetterMap[ID] = Tuple2(() => id, (val) => id = val as String?);
-    return getterSetterMap;
+    getterSetterMap.loadMap(map);
   }
 
   @override
@@ -74,11 +55,6 @@ abstract class GenericModel implements BaseModel {
     getterSetterMap[key]!.item2(value);
     return true;
   }
-
-  /// Implemented by subclasses to map the getters and setters of the object.
-  ///
-  /// Cannot have keys that have the values [TYPE] or [ID]
-  Map<String, Tuple2<Getter<dynamic>, Setter<dynamic>>> getGetterSetterMap();
 
   /// Converts the pair of [Getter] and [Setter] for an enum into the
   /// appropriate pair for storage (a String)
