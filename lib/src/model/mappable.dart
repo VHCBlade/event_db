@@ -14,11 +14,13 @@ abstract class MappableModel implements BaseModel {
     final getterSetterMap = getGetterSetterMap();
     assert(
       !getterSetterMap.containsKey(typeKey),
-      '"$typeKey" is already used by GenericModel. Do not use it for extensions',
+      '"$typeKey" is already used by GenericModel. '
+      'Do not use it for extensions',
     );
     assert(
       !getterSetterMap.containsKey(idKey),
-      '"$idKey" is already used by GenericModel. Do not use it for extensions',
+      '"$idKey" is already used by GenericModel. '
+      'Do not use it for extensions',
     );
     getterSetterMap[idKey] = Tuple2(() => id, (val) => id = val as String?);
     return getterSetterMap;

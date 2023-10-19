@@ -1,5 +1,4 @@
 import 'package:event_db/event_db.dart';
-import 'package:event_db/src/model/mappable.dart';
 import 'package:tuple/tuple.dart';
 
 /// Base Class to be extended by
