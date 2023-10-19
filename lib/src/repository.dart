@@ -9,9 +9,9 @@ import 'package:event_db/event_db.dart';
 /// retrieved using [findModel] in a separate session.
 abstract class DatabaseRepository extends Repository {
   /// This functions finds all models of the given type that have their
-  /// [GenericModel.id] start with the prefix given by the [supplier]s
+  /// [BaseModel.id] start with the prefix given by the [supplier]s
   /// [BaseModelIDExtension.prefixTypeForId]
-  FutureOr<Iterable<T>> findAllModelsOfType<T extends GenericModel>(
+  FutureOr<Iterable<T>> findAllModelsOfType<T extends BaseModel>(
     String database,
     T Function() supplier,
   );
@@ -21,17 +21,17 @@ abstract class DatabaseRepository extends Repository {
   late final errorStream = StreamController<DatabaseException>.broadcast();
 
   /// Finds the [T] model in [database] with id of [key].
-  FutureOr<T?> findModel<T extends GenericModel>(String database, String key);
+  FutureOr<T?> findModel<T extends BaseModel>(String database, String key);
 
   /// Deletes the [T] [model] in [database]. [model] doesn not need to be
   /// exactly the same, just have the same id.
-  FutureOr<bool> deleteModel<T extends GenericModel>(String database, T model);
+  FutureOr<bool> deleteModel<T extends BaseModel>(String database, T model);
 
   /// Saves the [T] [model] in [database]. [model]s that do not have an existing
   /// id will have one automatically assigned to them. This function doesn't
   /// care if there is an already existing model or not. Existing models will
   /// just be overridden
-  FutureOr<T> saveModel<T extends GenericModel>(String database, T model);
+  FutureOr<T> saveModel<T extends BaseModel>(String database, T model);
 
   /// Saves the [T] [models] in [database]. [models] that do not have an
   /// existing id will have one automatically assigned to them. This function
@@ -41,7 +41,7 @@ abstract class DatabaseRepository extends Repository {
   /// The default implementation will simply call [saveModel] multiple times.
   /// A concrete implementation with a more efficient way of doing this should
   /// override this function.
-  FutureOr<void> saveModels<T extends GenericModel>(
+  FutureOr<void> saveModels<T extends BaseModel>(
     String database,
     Iterable<T> models,
   ) async {
@@ -53,7 +53,7 @@ abstract class DatabaseRepository extends Repository {
   /// The default implementation simply calls [findModel] multiple times.
   /// A concrete implementation with a more efficient way of doing this should
   /// override this function.
-  FutureOr<Iterable<T>> findModels<T extends GenericModel>(
+  FutureOr<Iterable<T>> findModels<T extends BaseModel>(
     String database,
     Iterable<String> keys,
   ) async =>
@@ -72,7 +72,7 @@ abstract class DatabaseRepository extends Repository {
   ///
   /// A concrete implementation with a more efficient way of doing this should
   /// override this function.
-  FutureOr<Iterable<T>> searchByModelAndFields<T extends GenericModel>(
+  FutureOr<Iterable<T>> searchByModelAndFields<T extends BaseModel>(
     String database,
     T Function() supplier,
     T model,
@@ -94,7 +94,7 @@ abstract class DatabaseRepository extends Repository {
   ///
   /// A concrete implementation with a more efficient way of doing this should
   /// override this function.
-  FutureOr<bool> containsRows<T extends GenericModel>(
+  FutureOr<bool> containsRows<T extends BaseModel>(
     String database,
     T Function() supplier,
   ) async =>
@@ -126,27 +126,27 @@ class SpecificDatabase {
   final String databaseName;
 
   /// This functions finds all models of the given type that have their
-  /// [GenericModel.id] start with the prefix given by the [supplier]s
+  /// [BaseModel.id] start with the prefix given by the [supplier]s
   /// [BaseModelIDExtension.prefixTypeForId]
-  FutureOr<Iterable<T>> findAllModelsOfType<T extends GenericModel>(
+  FutureOr<Iterable<T>> findAllModelsOfType<T extends BaseModel>(
     T Function() supplier,
   ) =>
       database.findAllModelsOfType(databaseName, supplier);
 
   /// Finds the [T] model in [databaseName] with id of [key].
-  FutureOr<T?> findModel<T extends GenericModel>(String key) =>
+  FutureOr<T?> findModel<T extends BaseModel>(String key) =>
       database.findModel(databaseName, key);
 
   /// Deletes the [T] [model] in [databaseName]. [model] doesn not need to be
   /// exactly the same, just have the same id.
-  FutureOr<bool> deleteModel<T extends GenericModel>(T model) =>
+  FutureOr<bool> deleteModel<T extends BaseModel>(T model) =>
       database.deleteModel(databaseName, model);
 
   /// Saves the [T] [model] in [databaseName]. [model]s that do not have an
   /// existing id will have one automatically assigned to them. This function
   /// doesn't  care if there is an already existing model or not. Existing
   /// models will just be overridden
-  FutureOr<T> saveModel<T extends GenericModel>(T model) =>
+  FutureOr<T> saveModel<T extends BaseModel>(T model) =>
       database.saveModel(databaseName, model);
 
   /// Saves the [T] [models] in [databaseName]. [models] that do not have an
@@ -157,11 +157,11 @@ class SpecificDatabase {
   /// The default implementation will simply call [saveModel] multiple times.
   /// A concrete implementation with a more efficient way of doing this should
   /// override this function.
-  FutureOr<void> saveModels<T extends GenericModel>(Iterable<T> models) =>
+  FutureOr<void> saveModels<T extends BaseModel>(Iterable<T> models) =>
       database.saveModels(databaseName, models);
 
   /// Finds all the models in [databaseName] that have the given [keys]
-  FutureOr<Iterable<T>> findModels<T extends GenericModel>(
+  FutureOr<Iterable<T>> findModels<T extends BaseModel>(
     Iterable<String> keys,
   ) =>
       database.findModels<T>(databaseName, keys);
@@ -170,7 +170,7 @@ class SpecificDatabase {
   /// [model]'s values
   ///
   /// Only values that are mapped to keys in [fields] will be considered.
-  FutureOr<Iterable<T>> searchByModelAndFields<T extends GenericModel>(
+  FutureOr<Iterable<T>> searchByModelAndFields<T extends BaseModel>(
     T Function() supplier,
     T model,
     List<String> fields,
@@ -184,7 +184,7 @@ class SpecificDatabase {
   }
 
   /// Returns true if the table/container in [databaseName] contains any data with same type provided by [supplier]
-  FutureOr<bool> containsRows<T extends GenericModel>(
+  FutureOr<bool> containsRows<T extends BaseModel>(
     T Function() supplier,
   ) async =>
       (await database.findAllModelsOfType(databaseName, supplier)).isNotEmpty;

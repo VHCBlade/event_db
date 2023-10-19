@@ -1,8 +1,8 @@
 import 'package:event_bloc/event_bloc.dart';
 import 'package:event_db/event_db.dart';
 
-/// Represents a constructor specifically for [GenericModel]
-typedef ModelConstructor<T extends GenericModel> = T Function();
+/// Represents a constructor specifically for [BaseModel]
+typedef ModelConstructor<T extends BaseModel> = T Function();
 
 /// A [DatabaseRepository] that stores everything in memory
 ///
@@ -17,10 +17,10 @@ class FakeDatabaseRepository extends DatabaseRepository {
   final Map<Type, ModelConstructor> constructors;
 
   /// The "Storage" of this database
-  Map<String, Map<String, GenericModel>> fakeDatabaseMap = {};
+  Map<String, Map<String, BaseModel>> fakeDatabaseMap = {};
 
   @override
-  bool deleteModel<T extends GenericModel>(String database, T model) {
+  bool deleteModel<T extends BaseModel>(String database, T model) {
     if (model.id == null) {
       return false;
     }
@@ -29,7 +29,7 @@ class FakeDatabaseRepository extends DatabaseRepository {
   }
 
   @override
-  Iterable<T> findAllModelsOfType<T extends GenericModel>(
+  Iterable<T> findAllModelsOfType<T extends BaseModel>(
     String database,
     T Function() supplier,
   ) {
@@ -43,7 +43,7 @@ class FakeDatabaseRepository extends DatabaseRepository {
   }
 
   @override
-  T? findModel<T extends GenericModel>(String database, String key) {
+  T? findModel<T extends BaseModel>(String database, String key) {
     final baseModel = getMap(database)[key];
     if (baseModel == null) {
       return null;
@@ -59,7 +59,7 @@ class FakeDatabaseRepository extends DatabaseRepository {
   }
 
   @override
-  T saveModel<T extends GenericModel>(String database, T model) {
+  T saveModel<T extends BaseModel>(String database, T model) {
     final map = getMap(database);
 
     map[model.autoGenId] = getInstance<T>()..copy(model);
@@ -82,7 +82,7 @@ class FakeDatabaseRepository extends DatabaseRepository {
   }
 
   /// Gets the "Storage" map for the given [database]
-  Map<String, GenericModel> getMap(String database) {
+  Map<String, BaseModel> getMap(String database) {
     if (fakeDatabaseMap[database] == null) {
       fakeDatabaseMap[database] = {};
     }

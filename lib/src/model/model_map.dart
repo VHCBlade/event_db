@@ -2,7 +2,7 @@ import 'package:event_db/event_db.dart';
 
 /// Represents a map of [GenericModel]s with functions to automatically
 /// retrieve and save them in a [DatabaseRepository]
-class GenericModelMap<T extends GenericModel> {
+class GenericModelMap<T extends BaseModel> {
   /// Maintains a [map] for the [T] models with their id as their key.
   ///
   /// [supplier] generates a new instance of [T]
@@ -18,7 +18,7 @@ class GenericModelMap<T extends GenericModel> {
     this.defaultDatabaseName,
   });
 
-  /// The map of [GenericModel]s with their id as the key
+  /// The map of [BaseModel]s with their id as the key
   final Map<String, T> map = {};
 
   /// Creates a new instance of [T], provided in the constructor

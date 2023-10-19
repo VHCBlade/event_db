@@ -1,3 +1,10 @@
+## 0.1.23
+
+- Refactored GenericModel to implement newly created BaseModel instead.
+- Moved GenericModel ID functions to BaseModelIDExtension (thus they can no longer be overwritten)
+- Moved GenericModel Field functions to BaseModelFieldExtension (thus they can no longer be overwritten)
+- Changed all references to GenericModel to instead reference BaseModel
+
 ## 0.1.22
 
 - Added containsRows function to check if a table/container in a database has any values with the same type. This has a default inefficient implementation that can be overridden.
