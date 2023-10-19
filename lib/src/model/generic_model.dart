@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
+import 'package:event_db/event_db.dart';
 import 'package:tuple/tuple.dart';
-import 'package:uuid/uuid.dart';
 
 /// Getter function to retrieve a field from a [GenericModel]
 typedef Getter<T> = T Function();
@@ -11,15 +11,39 @@ final bool Function(dynamic, dynamic) _equality =
     const DeepCollectionEquality(DefaultEquality<dynamic>()).equals;
 
 /// Base Class to be extended by
-abstract class GenericModel {
+abstract class GenericModel implements BaseModel {
   /// The key for [type] in the result of [toMap]
   static const TYPE = 'type';
 
   /// The key for [id] in the result of [toMap]
   static const ID = 'id';
 
-  /// Unique identifier for this model
+  @override
+  String get type;
+
+  @override
   String? id;
+
+  @override
+  Map<String, dynamic> toMap() {
+    final map = <String, dynamic>{};
+    map[TYPE] = type;
+    getterSetterMap.keys
+        .forEach((element) => map[element] = getterSetterMap[element]!.item1());
+
+    return map;
+  }
+
+  @override
+  void loadFromMap(Map<String, dynamic> map, {bool respectType = true}) {
+    if (respectType && map.containsKey(TYPE)) {
+      if (map[TYPE] != type) {
+        throw FormatException('Type in $map does not match $type');
+      }
+    }
+    getterSetterMap.keys
+        .forEach((element) => getterSetterMap[element]!.item2(map[element]));
+  }
 
   /// Used by [toMap] to generate the map
   late final Map<String, Tuple2<Getter<dynamic>, Setter<dynamic>>>
@@ -36,34 +60,6 @@ abstract class GenericModel {
     );
     getterSetterMap[ID] = Tuple2(() => id, (val) => id = val as String?);
     return getterSetterMap;
-  }
-
-  /// Converts this [GenericModel] into a Serializable Map.
-  ///
-  /// Can be coverted back into the Class version by calling [loadFromMap]
-  Map<String, dynamic> toMap() {
-    final map = <String, dynamic>{};
-    map[TYPE] = type;
-    getterSetterMap.keys
-        .forEach((element) => map[element] = getterSetterMap[element]!.item1());
-
-    return map;
-  }
-
-  /// Loads a Serializable map into the values of this [GenericModel]
-  ///
-  /// You can generate a value that can be passed into this by using [toMap]
-  ///
-  /// [respectType] will make a check to ensure that the TYPE entry is the same
-  /// if true. This will throw an [FormatException] if they're not the same
-  void loadFromMap(Map<String, dynamic> map, {bool respectType = true}) {
-    if (respectType && map.containsKey(TYPE)) {
-      if (map[TYPE] != type) {
-        throw FormatException('Type in $map does not match $type');
-      }
-    }
-    getterSetterMap.keys
-        .forEach((element) => getterSetterMap[element]!.item2(map[element]));
   }
 
   /// Copies values from the given [model] into this model.
@@ -117,15 +113,15 @@ abstract class GenericModel {
         .reduce((value, element) => value && element);
   }
 
-  /// Returns the value of the field with name [key] or null if [key] is not a
-  /// field in this model.
+  @override
+  Iterable<String> get fieldKeys => getterSetterMap.keys;
+
+  @override
   dynamic getField(String key) {
     return getterSetterMap[key]?.item1();
   }
 
-  /// Sets the field with name [key] to the given [value]
-  ///
-  /// Returns true if successful and false if the [key] doesn't exist.
+  @override
   bool setField(String key, dynamic value) {
     if (!getterSetterMap.containsKey(key)) {
       return false;
@@ -139,7 +135,7 @@ abstract class GenericModel {
   /// [onlyFields] and [exceptFields] can be used to limit the fields that are
   /// evaluated. The two are mutually exclusive and an error will be thrown if
   /// both are specified.
-  Iterable<String> fieldsToEvaluate<T extends GenericModel>(
+  Iterable<String> fieldsToEvaluate<T extends BaseModel>(
     Iterable<String>? onlyFields,
     Iterable<String>? exceptFields,
   ) {
@@ -147,7 +143,7 @@ abstract class GenericModel {
       onlyFields == null || exceptFields == null,
       'onlyFields and exceptFields cannot both be specified at the same time',
     );
-    return getterSetterMap.keys.where((element) {
+    return fieldKeys.where((element) {
       if (onlyFields != null) {
         return onlyFields.contains(element);
       }
@@ -158,31 +154,10 @@ abstract class GenericModel {
     });
   }
 
-  /// Returns [id] if that value is not null. Otherwise will automatically
-  /// generate a new value for [id] with the [idSuffix] setter.
-  String get autoGenId => id = id ?? prefixTypeForId(const Uuid().v4());
-
-  /// Prefixes this [GenericModel]'s [type] to [idSuffix]
-  String prefixTypeForId(String idSuffix) => '$type::$idSuffix';
-
-  /// Sets the [id] to have [idSuffix] as a suffix. This will override the
-  /// existing [id].
-  set idSuffix(String? idSuffix) =>
-      id = idSuffix == null ? null : prefixTypeForId(idSuffix);
-
-  /// Returns the last part of this [id], which is always a unique identifier.
-  ///
-  /// Note that if multiple types are prefixed, none of those will be returned.
-  String? get idSuffix => id?.split('::').last;
-
   /// Implemented by subclasses to map the getters and setters of the object.
   ///
   /// Cannot have keys that have the values [TYPE] or [ID]
   Map<String, Tuple2<Getter<dynamic>, Setter<dynamic>>> getGetterSetterMap();
-
-  /// Unique type to give to the model. Whether or not collision is expected is
-  /// dependent on the parameters of your system.
-  String get type;
 
   /// Converts the pair of [Getter] and [Setter] for an enum into the
   /// appropriate pair for storage (a String)

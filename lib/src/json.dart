@@ -4,7 +4,7 @@ import 'package:event_db/event_db.dart';
 
 /// Adds [toJsonString] and [loadFromJsonString] methods to simplify working
 /// with encoded json maps.
-extension JsonStringModel on GenericModel {
+extension JsonStringModel on BaseModel {
   /// Serializes this model into a json Object map string.
   String toJsonString() => json.encode(toMap());
 

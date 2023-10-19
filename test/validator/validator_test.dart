@@ -12,7 +12,7 @@ void main() {
 }
 
 void validatorCollectionTest() {
-  SerializableListTester<GenericModel>(
+  SerializableListTester<BaseModel>(
     testGroupName: 'ValidatorCollection',
     mainTestName: 'Assert',
     mode: ListTesterMode.auto,
@@ -96,7 +96,7 @@ void numRangeTest() {
 }
 
 void requiredTest() {
-  SerializableListTester<GenericModel>(
+  SerializableListTester<BaseModel>(
     testGroupName: 'RequiredValidator',
     mainTestName: 'Assert',
     mode: ListTesterMode.auto,

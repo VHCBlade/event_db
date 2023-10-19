@@ -11,7 +11,7 @@ void main() {
 }
 
 void listSubTest() {
-  SerializableListTester<GenericModel>(
+  SerializableListTester<BaseModel>(
     testGroupName: 'ListSubValidator',
     mainTestName: 'Assert',
     mode: ListTesterMode.auto,
@@ -34,7 +34,7 @@ void listSubTest() {
 }
 
 void listSizeTest() {
-  SerializableListTester<GenericModel>(
+  SerializableListTester<BaseModel>(
     testGroupName: 'ListSizeValidator',
     mainTestName: 'Assert',
     mode: ListTesterMode.auto,

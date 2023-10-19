@@ -1,4 +1,4 @@
-import 'package:event_db/src/fake.dart';
+import 'package:event_db/event_db.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'models.dart';

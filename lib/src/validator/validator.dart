@@ -1,6 +1,6 @@
 import 'package:event_db/event_db.dart';
 
-/// Used to ensure that a [GenericModel.toMap] meets specific parameters.
+/// Used to ensure that a [BaseModel.toMap] meets specific parameters.
 abstract class Validator {
   /// [name] is split using '.' and the map is traversed sequentially until the
   /// value is returned.
@@ -9,7 +9,7 @@ abstract class Validator {
   /// The message to be displayed if [validate] fails.
   String get message;
 
-  /// Returns true if the given [map] from [GenericModel.toMap] passes this
+  /// Returns true if the given [map] from [BaseModel.toMap] passes this
   /// [Validator]'s check.
   bool validate(Map<String, dynamic> map);
 }
