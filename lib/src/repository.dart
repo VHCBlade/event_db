@@ -10,7 +10,7 @@ import 'package:event_db/event_db.dart';
 abstract class DatabaseRepository extends Repository {
   /// This functions finds all models of the given type that have their
   /// [GenericModel.id] start with the prefix given by the [supplier]s
-  /// [GenericModel.prefixTypeForId]
+  /// [BaseModelIDExtension.prefixTypeForId]
   FutureOr<Iterable<T>> findAllModelsOfType<T extends GenericModel>(
     String database,
     T Function() supplier,
@@ -127,7 +127,7 @@ class SpecificDatabase {
 
   /// This functions finds all models of the given type that have their
   /// [GenericModel.id] start with the prefix given by the [supplier]s
-  /// [GenericModel.prefixTypeForId]
+  /// [BaseModelIDExtension.prefixTypeForId]
   FutureOr<Iterable<T>> findAllModelsOfType<T extends GenericModel>(
     T Function() supplier,
   ) =>
