@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:event_bloc/event_bloc.dart';
-import 'package:event_db/src/exception.dart';
-import 'package:event_db/src/model.dart';
+import 'package:event_db/event_db.dart';
 
 /// Represents a class that implements some specific implementation of an
 /// interface with storage. Classes that implement this must retain data
