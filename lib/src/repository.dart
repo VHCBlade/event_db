@@ -88,6 +88,19 @@ abstract class DatabaseRepository extends Repository {
     );
   }
 
+  /// Returns true if the table/container in [database] contains any data with same type provided by [supplier]
+  ///
+  /// The default implementation is to call [findAllModelsOfType]s and then
+  /// check if any rows were returned.
+  ///
+  /// A concrete implementation with a more efficient way of doing this should
+  /// override this function.
+  FutureOr<bool> containsRows<T extends GenericModel>(
+    String database,
+    T Function() supplier,
+  ) async =>
+      (await findAllModelsOfType(database, supplier)).isNotEmpty;
+
   @override
   void dispose() {
     super.dispose();
@@ -158,12 +171,6 @@ class SpecificDatabase {
   /// [model]'s values
   ///
   /// Only values that are mapped to keys in [fields] will be considered.
-  ///
-  /// The default implementation is to call [findAllModelsOfType]s and then
-  /// perform a comparison individiually.
-  ///
-  /// A concrete implementation with a more efficient way of doing this should
-  /// override this function.
   FutureOr<Iterable<T>> searchByModelAndFields<T extends GenericModel>(
     T Function() supplier,
     T model,
@@ -176,4 +183,10 @@ class SpecificDatabase {
       fields,
     );
   }
+
+  /// Returns true if the table/container in [databaseName] contains any data with same type provided by [supplier]
+  FutureOr<bool> containsRows<T extends GenericModel>(
+    T Function() supplier,
+  ) async =>
+      (await database.findAllModelsOfType(databaseName, supplier)).isNotEmpty;
 }

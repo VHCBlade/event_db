@@ -16,7 +16,42 @@ void main() {
     test('Find Models', findModelsTest);
     test('Save Models', saveModelsTest);
     test('Search By Model And Fields', searchByModelAndFields);
+    test('Contains Rows', containsRows);
   });
+}
+
+Future<void> containsRows() async {
+  final repository = FakeDatabaseRepository(constructors: constructors);
+  final database = SpecificDatabase(repository, 'Playful');
+
+  expect(await database.containsRows(ExampleModel.new), false);
+  expect(await database.containsRows(ExampleCompoundModel.new), false);
+
+  final model = repository.saveModel(
+    'Playful',
+    ExampleModel()..dateTime = DateTime(1998),
+  );
+
+  expect(await database.containsRows(ExampleModel.new), true);
+  expect(await database.containsRows(ExampleCompoundModel.new), false);
+
+  final compounModel = repository.saveModel(
+    'Playful',
+    ExampleCompoundModel()..model = ExampleModel(),
+  );
+
+  expect(await database.containsRows(ExampleModel.new), true);
+  expect(await database.containsRows(ExampleCompoundModel.new), true);
+
+  await database.deleteModel(model);
+
+  expect(await database.containsRows(ExampleModel.new), false);
+  expect(await database.containsRows(ExampleCompoundModel.new), true);
+
+  await database.deleteModel(compounModel);
+
+  expect(await database.containsRows(ExampleModel.new), false);
+  expect(await database.containsRows(ExampleCompoundModel.new), false);
 }
 
 Future<void> searchByModelAndFields() async {

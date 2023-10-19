@@ -1,3 +1,7 @@
+## 0.1.22
+
+- Added containsRows function to check if a table/container in a database has any values with the same type. This has a default inefficient implementation that can be overridden.
+
 ## 0.1.21
 
 - Added getField and setField function to GenericModel
