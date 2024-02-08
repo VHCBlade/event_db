@@ -1,3 +1,7 @@
+## 0.2.1
+
+- Added loadModels to GenericModelMap for conveniently adding the loadedModels into the local map after a function that loads the models is called.
+
 ## 0.2.0
 
 - BREAKING CHANGE: Changed all references to GenericModel to instead reference BaseModel

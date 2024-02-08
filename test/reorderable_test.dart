@@ -149,7 +149,7 @@ Map<String, List<ExampleReorderableModel> Function()> get commonTestCases => {
       'One': () => [
             ExampleReorderableModel()
               ..name = 'One'
-              ..ordinal = 0
+              ..ordinal = 0,
           ],
       'Three': () => [
             ExampleReorderableModel()

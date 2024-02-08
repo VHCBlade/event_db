@@ -23,7 +23,7 @@ void validatorCollectionTest() {
         ['map.amazing.enum'],
         ['list.0.type', 'list.0'],
         ['list.0.dateTime', 'list.1.type', 'list'],
-        ['name', 'ordinal', 'id']
+        ['name', 'ordinal', 'id'],
       ];
 
       for (final testCase in list) {
@@ -116,7 +116,7 @@ void requiredTest() {
         'list',
         'name',
         'ordinal',
-        'id'
+        'id',
       ];
 
       for (final testCase in list) {
@@ -187,7 +187,7 @@ final numTestCases = {
         NumberModel()
           ..intVal = 7
           ..doubleVal = -7.25,
-      ]
+      ],
 };
 
 final dateTimeTestCases = {

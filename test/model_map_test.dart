@@ -98,6 +98,68 @@ void main() {
         'example::4',
       });
     });
+    test('LoadModels', () async {
+      final repository = FakeDatabaseRepository(
+        constructors: {ExampleModel: ExampleModel.new},
+      );
+      final coolMap = GenericModelMap(
+        repository: () => repository,
+        supplier: ExampleModel.new,
+        defaultDatabaseName: 'cool',
+      );
+      final radMap = GenericModelMap(
+        repository: () => repository,
+        supplier: ExampleModel.new,
+        defaultDatabaseName: 'rad',
+      );
+
+      await coolMap.addModel(ExampleModel()..idSuffix = '1');
+      await radMap.addModel(ExampleModel()..idSuffix = '2');
+
+      await coolMap.addModel(
+        ExampleModel()..idSuffix = '3',
+        databaseName: 'rad',
+      );
+      await radMap.addModel(
+        ExampleModel()..idSuffix = '4',
+        databaseName: 'cool',
+      );
+
+      await coolMap.loadModels(
+        (database) => database.findAllModelsOfType(ExampleModel.new),
+      );
+      await radMap.loadModels(
+        (database) => database.findModels(['example::3']),
+      );
+
+      expect(coolMap.map.keys.toSet(), {
+        'example::1',
+        'example::3',
+        'example::4',
+      });
+      expect(radMap.map.keys.toSet(), {
+        'example::2',
+        'example::3',
+        'example::4',
+      });
+
+      coolMap.map.clear();
+      radMap.map.clear();
+
+      await coolMap.loadModels(
+        (database) => database.findAllModelsOfType(ExampleModel.new),
+      );
+      await radMap.loadModels(
+        (database) => database.findModels(['example::3']),
+      );
+      expect(coolMap.map.keys.toSet(), {
+        'example::1',
+        'example::4',
+      });
+      expect(radMap.map.keys.toSet(), {
+        'example::3',
+      });
+    });
     test('RemoveLoadedModels', () async {
       final repository = FakeDatabaseRepository(
         constructors: {ExampleModel: ExampleModel.new},

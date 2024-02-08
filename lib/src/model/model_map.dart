@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:event_db/event_db.dart';
 
 /// Represents a map of [GenericModel]s with functions to automatically
@@ -58,24 +60,35 @@ class GenericModelMap<T extends BaseModel> {
 
   /// Loads all of the [T] models present in [repository]
   /// for the given database.
-  Future<Iterable<T>> loadAll({String? databaseName}) async {
+  FutureOr<Iterable<T>> loadAll({String? databaseName}) {
+    return loadModels(
+      (database) => database.findAllModelsOfType(supplier),
+      databaseName: databaseName,
+    );
+  }
+
+  /// Loads models using the given [loadModels] function and adds them to the
+  /// [map]
+  FutureOr<Iterable<T>> loadModels(
+    FutureOr<Iterable<T>> Function(SpecificDatabase database) loadModels, {
+    String? databaseName,
+  }) async {
     final database = specificDatabase(databaseName);
-    final models = await database.findAllModelsOfType(supplier);
+    final models = await loadModels(database);
     addLoadedModels(models);
     return models;
   }
 
   /// Loads all of the [T] models with the given [ids] in [repository]
   /// for the given database.
-  Future<Iterable<T>> loadModelIds(
+  FutureOr<Iterable<T>> loadModelIds(
     Iterable<String> ids, {
     String? databaseName,
   }) async {
-    final database = specificDatabase(databaseName);
-
-    final loadedModels = await database.findModels<T>(ids);
-    addLoadedModels(loadedModels);
-    return loadedModels;
+    return loadModels(
+      (database) => database.findModels<T>(ids),
+      databaseName: databaseName,
+    );
   }
 
   /// Adds the given [model] to the [map] and the given database in [repository]
