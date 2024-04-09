@@ -1,6 +1,31 @@
 import 'package:event_db/event_db.dart';
 import 'package:tuple/tuple.dart';
 
+/// R
+enum DateTimeConversion {
+  /// Converts [DateTime]s to microseconds
+  microseconds,
+
+  /// Converts [DateTime]s to milliseconds
+  milliseconds,
+
+  /// Converts [DateTime]s to seconds
+  seconds,
+  ;
+}
+
+final _dateTimeConstructors = {
+  DateTimeConversion.microseconds: DateTime.fromMicrosecondsSinceEpoch,
+  DateTimeConversion.milliseconds: DateTime.fromMillisecondsSinceEpoch,
+  DateTimeConversion.seconds: (int value) =>
+      DateTime.fromMillisecondsSinceEpoch(value * 1000),
+};
+final _dateTimeGetters = <DateTimeConversion, int Function(DateTime)>{
+  DateTimeConversion.microseconds: (value) => value.microsecondsSinceEpoch,
+  DateTimeConversion.milliseconds: (value) => value.millisecondsSinceEpoch,
+  DateTimeConversion.seconds: (value) => value.millisecondsSinceEpoch ~/ 1000,
+};
+
 /// Base Class to be extended by
 abstract class GenericModel extends MappableModel {
   /// The key for [type] in the result of [toMap]
@@ -144,17 +169,30 @@ abstract class GenericModel extends MappableModel {
           );
 
   /// Converts the pair of [Getter] and [Setter] for a [DateTime] into the
-  /// appropriate serialized type. (microsecondsSinceEpoc)
+  /// appropriate serialized type.
+  ///
+  /// [conversion] sets what value will be saved in the final [Getter] and
+  /// [Setter] based on existing [DateTime] value.
   static Tuple2<Getter<dynamic>, Setter<dynamic>> dateTime(
     Getter<DateTime?> getter,
-    Setter<DateTime?> setter,
-  ) =>
-      Tuple2(
-        () => getter()?.microsecondsSinceEpoch,
-        (val) => setter(
-          val == null ? null : DateTime.fromMicrosecondsSinceEpoch(val as int),
-        ),
-      );
+    Setter<DateTime?> setter, {
+    DateTimeConversion conversion = DateTimeConversion.microseconds,
+  }) {
+    final conversionGetter = _dateTimeGetters[conversion]!;
+    final conversionConstructor = _dateTimeConstructors[conversion]!;
+    return Tuple2(
+      () {
+        final gotten = getter();
+        if (gotten == null) {
+          return null;
+        }
+        return conversionGetter(gotten);
+      },
+      (val) => setter(
+        val == null ? null : conversionConstructor(val as int),
+      ),
+    );
+  }
 
   /// Takes the pair of [Getter] and [Setter] for a primitive and puts them in
   /// a [Tuple2]. Convenience function if you don't want to rely on the tuple

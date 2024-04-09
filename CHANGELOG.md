@@ -1,3 +1,7 @@
+## 0.2.2
+
+- Added DateTimeConversion option to GenericModel.dateTime to allow for seconds and milliseconds conversion
+
 ## 0.2.1
 
 - Added loadModels to GenericModelMap for conveniently adding the loadedModels into the local map after a function that loads the models is called.

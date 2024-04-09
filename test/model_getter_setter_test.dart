@@ -97,6 +97,42 @@ void main() {
         expect(model2.map['0']!.myEnum, model.map['0']!.myEnum);
         expect(model2.map['0']!.id, model.map['0']!.id);
       });
+      test('DateTime Conversion', () {
+        final model = ExampleConversionModel();
+        final model2 = ExampleConversionModel();
+
+        model
+          ..dateTime = DateTime.utc(1980)
+          ..dateTimeMilliseconds = DateTime.utc(1990)
+          ..dateTimeSeconds = DateTime.utc(2000);
+
+        model2.copy(model);
+
+        expect(model.dateTime?.isAtSameMomentAs(model2.dateTime!), true);
+        expect(
+          model.dateTimeMilliseconds
+              ?.isAtSameMomentAs(model2.dateTimeMilliseconds!),
+          true,
+        );
+        expect(
+          model.dateTimeSeconds?.isAtSameMomentAs(model2.dateTimeSeconds!),
+          true,
+        );
+
+        expect(model2.toMap()['dateTimeMilliseconds'], 631152000000);
+        expect(model2.toMap()['dateTimeSeconds'], 946684800);
+
+        model
+          ..dateTime = null
+          ..dateTimeMilliseconds = null
+          ..dateTimeSeconds = null;
+
+        model2.copy(model);
+
+        expect(model2.dateTime, null);
+        expect(model2.dateTimeMilliseconds, null);
+        expect(model2.dateTimeSeconds, null);
+      });
       test('Type Exception', () {
         final model = ExampleCompoundModel()..model = ExampleModel();
         final model2 = ExampleModel();

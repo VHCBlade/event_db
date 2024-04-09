@@ -51,6 +51,34 @@ class ExampleModel extends GenericModel {
   String get type => 'example';
 }
 
+class ExampleConversionModel extends GenericModel {
+  DateTime? dateTime = DateTime.now();
+  DateTime? dateTimeMilliseconds = DateTime.now();
+  DateTime? dateTimeSeconds = DateTime.now();
+
+  @override
+  Map<String, Tuple2<Getter<dynamic>, Setter<dynamic>>> getGetterSetterMap() =>
+      {
+        'dateTime': GenericModel.dateTime(
+          () => dateTime,
+          (value) => dateTime = value,
+        ),
+        'dateTimeMilliseconds': GenericModel.dateTime(
+          () => dateTimeMilliseconds,
+          (value) => dateTimeMilliseconds = value,
+          conversion: DateTimeConversion.milliseconds,
+        ),
+        'dateTimeSeconds': GenericModel.dateTime(
+          () => dateTimeSeconds,
+          (value) => dateTimeSeconds = value,
+          conversion: DateTimeConversion.seconds,
+        ),
+      };
+
+  @override
+  String get type => 'example';
+}
+
 class ExampleReorderableModel extends GenericModel with OrdereableModel {
   String? name;
   @override
